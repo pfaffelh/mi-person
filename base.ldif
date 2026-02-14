@@ -1,0 +1,29 @@
+dn: dc=de
+objectClass: top
+objectClass: domain
+dc: de
+
+dn: dc=uni-freiburg,dc=de
+objectClass: domain
+dc: uni-freiburg
+
+dn: dc=mathematik,dc=uni-freiburg,dc=de
+objectClass: domain
+dc: mathematik
+
+dn: dc=home,dc=mathematik,dc=uni-freiburg,dc=de
+objectClass: domain
+dc: home
+
+dn: ou=People,dc=home,dc=mathematik,dc=uni-freiburg,dc=de
+objectClass: organizationalUnit
+ou: People
+
+dn: ou=AM,ou=People,dc=home,dc=mathematik,dc=uni-freiburg,dc=de
+objectClass: organizationalUnit
+ou: AM
+
+dn: ou=agruzicka,ou=AM,ou=People,dc=home,dc=mathematik,dc=uni-freiburg,dc=de
+objectClass: organizationalUnit
+ou: agruzicka
+
