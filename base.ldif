@@ -1,8 +1,3 @@
-dn: dc=de
-objectClass: top
-objectClass: domain
-dc: de
-
 dn: dc=uni-freiburg,dc=de
 objectClass: domain
 dc: uni-freiburg
@@ -19,11 +14,13 @@ dn: ou=People,dc=home,dc=mathematik,dc=uni-freiburg,dc=de
 objectClass: organizationalUnit
 ou: People
 
-dn: ou=AM,ou=People,dc=home,dc=mathematik,dc=uni-freiburg,dc=de
+dn: ou=Groups,dc=home,dc=mathematik,dc=uni-freiburg,dc=de
 objectClass: organizationalUnit
-ou: AM
+ou: Groups
 
-dn: ou=agruzicka,ou=AM,ou=People,dc=home,dc=mathematik,dc=uni-freiburg,dc=de
-objectClass: organizationalUnit
-ou: agruzicka
+dn: cn=cgibin,dc=home,dc=mathematik,dc=uni-freiburg,dc=de
+objectClass: inetOrgPerson
+cn: cgibin
+sn: cgibin
+userPassword: {SSHA}4t/SOkb0L76crRGE2yt9t+Efl81fVg+m
 

@@ -35,3 +35,6 @@ Weiter stelle ich mir vor, dass es in der App dann eine "Suchfunktion" gibt. Hie
 Bool'sche Variablen für: 
 * mit LDAP synchonisieren?
 * auf Homepage anzeigen?
+
+
+Sollen wir eine Liste von Ehemaligen führen (nicht Prof)?

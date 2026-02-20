@@ -1,0 +1,106 @@
+2026-02-18 23:23:52,374 - INFO - MI-VVZ - User pp131 hatte nicht gebügend Rechte, um sich einzuloggen.
+2026-02-18 23:24:24,938 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-18 23:24:26,070 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-18 23:24:37,445 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-18 23:25:33,541 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-18 23:36:27,981 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-18 23:36:50,555 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-19 19:50:30,642 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Adeosun, Samuel geändert.
+2026-02-19 19:52:08,354 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Adeosun, Samuel geändert.
+2026-02-19 19:52:09,811 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Adeosun, Samuel geändert.
+2026-02-19 19:54:01,400 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Adeosun, Samuel geändert.
+2026-02-19 19:54:10,902 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Adeosun, Samuel geändert.
+2026-02-19 19:54:44,241 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Braun, Lukas geändert.
+2026-02-19 19:58:22,401 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Adeosun, Samuel geändert.
+2026-02-19 20:04:53,519 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Adeosun, Samuel geändert.
+2026-02-19 20:05:03,996 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Adeosun, Samuel geändert.
+2026-02-19 20:09:23,643 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Adeosun, Samuel geändert.
+2026-02-19 20:20:33,390 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Adeosun, Samuel geändert.
+2026-02-19 20:20:44,597 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Adeosun, Samuel geändert.
+2026-02-19 20:20:55,422 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Adeosun, Samuel Ayomide  geändert.
+2026-02-19 20:21:14,383 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Amann, Marius geändert.
+2026-02-19 20:21:32,798 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Adeosun, Samuel geändert.
+2026-02-19 20:24:09,954 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Adeosun, Samuel geändert.
+2026-02-19 20:42:22,490 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen item Personen: Amann-Bartnick, Charlotte gelöscht, und abhängige Felder geändert.
+2026-02-19 20:49:44,682 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Andres, Sören geändert.
+2026-02-19 20:51:25,863 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Andres, Sören geändert.
+2026-02-19 20:51:56,597 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Andres, Sören geändert.
+2026-02-19 20:53:18,139 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Andres, Sören geändert.
+2026-02-19 20:54:30,727 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Alle Professor:innen und Privatdozent:innen des Mathematischen Instituts,  geändert.
+2026-02-19 20:55:52,720 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Alle Professor:innen und Privatdozent:innen des Mathematischen Instituts,  geändert.
+2026-02-19 20:56:59,710 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Anguige, Keith geändert.
+2026-02-19 20:57:15,475 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Angiuge, Keith geändert.
+2026-02-19 20:58:07,763 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Angiuge, Keith geändert.
+2026-02-19 21:01:06,021 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Andres, Sören geändert.
+2026-02-19 21:02:33,728 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Alle Professor:innen und Privatdozent:innen des Mathematischen Instituts,  geändert.
+2026-02-19 21:02:49,523 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Alle Professor:innen und Privatdozent:innen des Mathematischen Instituts,  geändert.
+2026-02-19 21:05:27,177 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Alle Professor:innen und Privatdozent:innen des Mathematischen Instituts,  geändert.
+2026-02-19 21:10:27,685 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Alle Professor:innen und Privatdozent:innen des Mathematischen Instituts,  geändert.
+2026-02-19 21:11:54,023 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Alle Professor:innen und Privatdozent:innen des Mathematischen Instituts,  geändert.
+2026-02-19 21:12:03,558 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Alle Professor:innen und Privatdozent:innen des Mathematischen Instituts,  geändert.
+2026-02-19 21:12:38,791 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Alle Professor:innen und Privatdozent:innen des Mathematischen Instituts,  geändert.
+2026-02-19 21:13:01,734 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Alle Professor:innen und Privatdozent:innen des Mathematischen Instituts,  geändert.
+2026-02-19 21:21:06,639 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Andres, Sören geändert.
+2026-02-19 21:23:37,349 - INFO - MI-VVZ - User Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'user'), 'user') hat in Personen Item Personen: Adeosun, Samuel geändert.
+2026-02-19 21:46:27,297 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-19 22:02:14,863 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-19 22:03:10,200 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-19 22:03:43,738 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Anguige, Keith geändert.
+2026-02-19 22:03:59,044 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Angiuge, Keith geändert.
+2026-02-19 22:04:17,846 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosun, Samuel geändert.
+2026-02-19 22:04:52,960 - INFO - MI-VVZ - User pp131 hat sich ausgeloggt.
+2026-02-19 22:04:58,504 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-19 22:05:06,313 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosun, Samuel geändert.
+2026-02-19 22:05:14,618 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosun, Samuel Ayomide  geändert.
+2026-02-19 22:08:50,143 - INFO - MI-VVZ - User pp131 hat sich ausgeloggt.
+2026-02-19 22:09:01,733 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-19 22:09:43,063 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosun, Samuel Ayomide  geändert.
+2026-02-19 22:09:54,630 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosu, Samuel Ayomide  geändert.
+2026-02-19 22:11:12,341 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosu, Samuel Ayomide  geändert.
+2026-02-19 22:12:42,945 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosu, Samuel Ayomide  geändert.
+2026-02-19 22:14:44,936 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosu, Samuel Ayomide  geändert.
+2026-02-19 22:15:38,694 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosu, Samuel Ayomide  geändert.
+2026-02-19 22:15:45,167 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosu, Samuel Ayomide  geändert.
+2026-02-19 22:16:27,643 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosu, Samuel Ayomide  geändert.
+2026-02-19 22:16:59,712 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosu, Samuel Ayomide  geändert.
+2026-02-19 22:18:19,592 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosu, Samuel Ayomide  geändert.
+2026-02-19 22:18:52,137 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosu, Samuel Ayomide  geändert.
+2026-02-19 22:24:08,690 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosu, Samuel Ayomide  geändert.
+2026-02-19 22:27:16,187 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosu, Samuel Ayomide  geändert.
+2026-02-19 22:27:24,850 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosu, Samuel Ayomide  geändert.
+2026-02-19 22:27:53,961 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosu, Samuel Ayomide  geändert.
+2026-02-19 22:28:07,964 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Demleitner, Andreas geändert.
+2026-02-19 22:28:52,309 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosu, Samuel Ayomide  geändert.
+2026-02-19 22:29:42,778 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosu, Samuel Ayomide  geändert.
+2026-02-19 22:29:44,607 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosu, Samuel Ayomide  geändert.
+2026-02-19 22:35:13,769 - INFO - MI-VVZ - User pp131 hat in Personen ein neues Item angelegt.
+2026-02-19 22:36:49,522 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosu, Samuel Ayomide  geändert.
+2026-02-19 22:37:15,195 - INFO - MI-VVZ - User pp131 hat in Personen item Personen: Adeosu, Samuel Ayomide  gelöscht, und abhängige Felder geändert.
+2026-02-19 22:37:31,215 - INFO - MI-VVZ - User pp131 hat in Personen item Personen: -,  gelöscht, und abhängige Felder geändert.
+2026-02-19 22:58:50,768 - INFO - MI-VVZ - User pp131 hat in Personencode ein neues Item angelegt.
+2026-02-19 22:59:07,691 - INFO - MI-VVZ - User pp131 hat in Personencode Item Personencode: Statusgruppe:  geändert.
+2026-02-19 23:00:38,522 - INFO - MI-VVZ - User pp131 hat in Personencodekategorie Item Personencodekategorie: Statusgruppe geändert.
+2026-02-19 23:01:15,559 - INFO - MI-VVZ - User pp131 hat in Personencodekategorie Item Personencodekategorie: Gruppe geändert.
+2026-02-19 23:21:45,109 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-19 23:26:14,271 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosun A, Samuel geändert.
+2026-02-19 23:26:21,829 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosun A, Samuel geändert.
+2026-02-19 23:26:23,279 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosun A, Samuel geändert.
+2026-02-19 23:52:07,465 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-20 00:04:41,914 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-20 00:47:06,450 - WARNING - MI-VVZ - LDAP-Error: {'result': -1, 'desc': "Can't contact LDAP server", 'errno': 110, 'ctrls': [], 'info': 'Connection timed out'}
+2026-02-20 00:47:06,451 - INFO - MI-VVZ - Ein falscher Anmeldeversuch.
+2026-02-20 00:47:22,161 - INFO - MI-VVZ - Ein falscher Anmeldeversuch.
+2026-02-20 00:48:06,298 - INFO - MI-VVZ - User pp131 hat sich ausgeloggt.
+2026-02-20 00:48:11,957 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-20 00:49:19,991 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-20 00:51:01,435 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Pfaffelhuber, Claudia geändert.
+2026-02-20 00:51:15,347 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Bangert, Victor geändert.
+2026-02-20 00:51:20,503 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Bangert, Victor geändert.
+2026-02-21 00:01:13,860 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-21 00:01:40,214 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosun, Samuel geändert.
+2026-02-21 00:08:49,899 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-21 00:09:17,083 - INFO - MI-VVZ - User pp131 hat sich ausgeloggt.
+2026-02-21 00:09:23,365 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-21 00:16:39,633 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
+2026-02-21 00:17:05,984 - INFO - MI-VVZ - User pp131 hat in Personen Item Personen: Adeosun, Samuel geändert.
+2026-02-21 00:31:17,326 - INFO - MI-VVZ - User pp131 hat in sich erfolgreich eingeloggt.
