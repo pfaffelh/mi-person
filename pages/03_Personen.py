@@ -5,7 +5,7 @@ import time
 import pymongo
 
 # Seiten-Layout
-st.set_page_config(page_title="VVZ", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
+st.set_page_config(page_title="PERSON", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
 
 # check if session_state is initialized if not change to main page
 if 'logged_in' not in st.session_state:
@@ -41,7 +41,7 @@ if st.session_state.logged_in:
             statusgruppen = loc
 
     
-    st.multiselect("Codes", all_codes, format_func = (lambda a: tools.repr(util.personencode, a, show_collection=False)), placeholder = "Bitte auswählen", help = "Es werden nur Personen angezeigt, die einen der genannten Codes haben.", key = "code_list")
+    st.session_state.code_list = st.multiselect("Codes", all_codes, statusgruppen, format_func = (lambda a: tools.repr(util.personencode, a, show_collection=False)), placeholder = "Bitte auswählen", help = "Es werden nur Personen angezeigt, die einen der genannten Codes haben.", key = "key_code_list")
      
     aktuell = st.toggle("Aktuelle Personen anzeigen", True)
     ehemalig = st.toggle("Ehemalige Personen anzeigen", False)
@@ -53,6 +53,7 @@ if st.session_state.logged_in:
         queries.append({"$or": [{"ausstiegsdatum": None}, {"ausstiegsdatum": {"$gt": datetime.today()}}]})
     if ehemalig:
         queries.append({"$or": [{"ausstiegsdatum": None}, {"ausstiegsdatum": {"$lt": datetime.today()}}]})
+    # st.write(queries)
     query = {"$and" : queries} if queries != [] else {}
 
     y = list(collection.find(query, sort=[("name", pymongo.ASCENDING), ("vorname", pymongo.ASCENDING)]))

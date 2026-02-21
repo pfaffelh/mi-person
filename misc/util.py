@@ -13,7 +13,7 @@ def configure_logging(file_path, level=logging.INFO):
     logger.setLevel(level)
     file_handler = logging.FileHandler(file_path)
     file_handler.setLevel(level)
-    formatter = logging.Formatter("%(asctime)s - %(levelname)s - MI-VVZ - %(message)s")
+    formatter = logging.Formatter("%(asctime)s - %(levelname)s - MI-PERSON - %(message)s")
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     return logger
