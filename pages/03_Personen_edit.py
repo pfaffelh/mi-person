@@ -74,7 +74,7 @@ if st.session_state.logged_in:
     sichtbar = True #st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == util.leer[collection] else False))
     st.write(x["bearbeitet"])
     hp_sichtbar = st.checkbox("Auf Homepages sichtbar", x["hp_sichtbar"])
-    ldap = st.checkbox("Ins Instituts-LDAP eintragen", x["ldap"], help = "Z.B. für Scan-to-Mail-Funktion der Drucker.")
+    # ldap = st.checkbox("Ins Instituts-LDAP eintragen", x["ldap"], help = "Z.B. für Scan-to-Mail-Funktion der Drucker.")
     col1, col2, col3, col4, col5, col6 = st.columns([1, 1, 1, 1, 1, 1])
     with col1:
         name=st.text_input('Name (de)', x["name"])
@@ -94,7 +94,6 @@ if st.session_state.logged_in:
             st.warning(f"Eine Person mit demselben Namen gibt es auch in { ', '.join([tools.repr(util.semester, x, False, True) for x in otherperson['semester']])}")
         else:
             st.warning(f"Eine Person mit demselben Namen gibt bereits!")
-
 
     codes_list = []
     for ck in list(util.personencodekategorie.find({}, sort = [("rang", pymongo.ASCENDING)])):
@@ -161,7 +160,7 @@ if st.session_state.logged_in:
     se = list(util.semester.find({"_id": {"$in": semester_list}}, sort=[("rang", pymongo.ASCENDING)]))
     semester_list = [s["_id"] for s in se]
 
-    x_updated = ({"name": name, "name_en": name_en, "vorname": vorname, "name_prefix": name_prefix, "titel": titel, "kennung" : kennung, "kommentar": kommentar, "kommentar_html": kommentar_html, "tel1": tel1, "email1": email1, "raum1" : raum1, "gebaeude1" : gebaeude1, "raum2" : raum2, "gebaeude2" : gebaeude2, "url" : url, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "ldap" : ldap, "einstiegsdatum" : einstiegsdatum, "ausstiegsdatum" : ausstiegsdatum, "semester": semester_list, "code" : code, "bearbeitet" : bearbeitet})
+    x_updated = ({"name": name, "name_en": name_en, "vorname": vorname, "name_prefix": name_prefix, "titel": titel, "kennung" : kennung, "kommentar": kommentar, "kommentar_html": kommentar_html, "tel1": tel1, "email1": email1, "raum1" : raum1, "gebaeude1" : gebaeude1, "raum2" : raum2, "gebaeude2" : gebaeude2, "url" : url, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "einstiegsdatum" : einstiegsdatum, "ausstiegsdatum" : ausstiegsdatum, "semester": semester_list, "code" : code, "bearbeitet" : bearbeitet})
     if st.button('Speichern', type = 'primary', key="submit2"):
         submit2 = True
 

@@ -196,7 +196,6 @@ def setup_session_state():
                 "url": "", 
                 "sichtbar": True, 
                 "hp_sichtbar": True, 
-                "ldap": True, 
                 "einstiegsdatum" : None, 
                 "ausstiegsdatum" : None,
                 "code": [], 
