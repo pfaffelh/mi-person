@@ -16,6 +16,6 @@ app_name = "person"
 # Die log-Datei
 log_file = 'mi.log'
 
-
+dekanat = ["cz1037", "pp131"]
 
 

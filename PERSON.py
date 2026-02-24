@@ -9,6 +9,8 @@ from misc.config import *
 import misc.util as util
 import misc.tools as tools
 
+util.setup_session_state()
+
 # Ab hier wird die Seite angezeigt
 st.header("PERSON Login")
 

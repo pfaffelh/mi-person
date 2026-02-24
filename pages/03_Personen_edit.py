@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
 import time
+from operator import itemgetter
 import pymongo
 import datetime
 
@@ -32,6 +33,11 @@ geb = list(util.gebaeude.find({"sichtbar": True}, sort=[("name_de", pymongo.ASCE
 
 new_entry = False
 submit1 = submit2 = False
+
+def sort_persons(personen_list):
+    loc = [util.person.find_one({"_id" : p_id}) for p_id in personen_list]
+    loc = sorted(loc, key=itemgetter('name', 'vorname'))
+    return [p["_id"] for p in loc]
 
 # Ab hier wird die Webseite erzeugt
 if st.session_state.logged_in:
@@ -75,7 +81,7 @@ if st.session_state.logged_in:
     st.write(x["bearbeitet"])
     hp_sichtbar = st.checkbox("Auf Homepages sichtbar", x["hp_sichtbar"])
     # ldap = st.checkbox("Ins Instituts-LDAP eintragen", x["ldap"], help = "Z.B. für Scan-to-Mail-Funktion der Drucker.")
-    col1, col2, col3, col4, col5, col6 = st.columns([1, 1, 1, 1, 1, 1])
+    col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
     with col1:
         name=st.text_input('Name (de)', x["name"])
     with col2:
@@ -84,17 +90,27 @@ if st.session_state.logged_in:
         vorname=st.text_input('Vorname', x["vorname"])
     with col4:
         name_prefix=st.text_input('Abkürzung des Vornamens', x["name_prefix"])
-    with col5:
+    col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+    with col1:
+        gender = st.selectbox("Gender auswählen", ["m", "w", "d", "kA"], ["m", "w", "d", "kA"].index(x["gender"]))
+    with col2:
         titel=st.text_input('Titel', x["titel"])
-    with col6:
+    with col3:
         kennung=st.text_input('RZ-Kennung', x["kennung"])
     otherperson = collection.find_one({"_id" : { "$ne" : x["_id"]}, "name" : name, "vorname" : vorname})
     if otherperson:
         if otherperson["semester"] != []:
             st.warning(f"Eine Person mit demselben Namen gibt es auch in { ', '.join([tools.repr(util.semester, x, False, True) for x in otherperson['semester']])}")
         else:
-            st.warning(f"Eine Person mit demselben Namen gibt bereits!")
-
+            st.warning(f"Eine Person mit demselben Namen gibt es bereits!")
+    with col4: 
+        query1 = {"$and": [{"$or": [{"einstiegsdatum": None}, {"einstiegsdatum": {"$lt": datetime.datetime.now()}}]}, {"$or": [{"ausstiegsdatum": None}, {"ausstiegsdatum": {"$gt": datetime.datetime.now()}}]}]}
+        query2 = {"_id" : {"$in" : x["vorgesetzte"]}}
+        pe = list(collection.find({"$or" : [query1, query2]}, sort=[("name", pymongo.ASCENDING), ("vorname", pymongo.ASCENDING)]))
+        per_dict = {p["_id"]: tools.repr(util.person, p["_id"], False, True) for p in pe }
+        vorgesetzte = st.multiselect("Vorgesetzte", per_dict.keys(), x["vorgesetzte"], format_func = (lambda a: per_dict[a]), placeholder = "Bitte auswählen")
+        v = list(util.person.find({"_id": {"$in": vorgesetzte}}, sort=[("name", pymongo.ASCENDING)]))
+        vorgesetzte = [d["_id"] for d in v]
     codes_list = []
     for ck in list(util.personencodekategorie.find({}, sort = [("rang", pymongo.ASCENDING)])):
         loc = [x["_id"] for x in list(util.personencode.find({"codekategorie" : ck["_id"]}, sort = [("rang", pymongo.ASCENDING)]))]
@@ -102,7 +118,7 @@ if st.session_state.logged_in:
 
     code = st.multiselect("Zugehörigkeiten", codes_list, x["code"], format_func = (lambda a: tools.repr(util.personencode, a, False, False)), placeholder = "Bitte auswählen")
     
-    col1, col2, col3, col4 = st.columns([2, 2, 1, 1])
+    col1, col2, col3, col4 = st.columns([2, 1, 2, 1])
     with col1:
         email1=st.text_input('Email 1', x["email1"])
     with col2:
@@ -133,34 +149,61 @@ if st.session_state.logged_in:
     kommentar_html=st.text_input('Kommentar für Homepage', x["kommentar_html"])
     kommentar=st.text_input('Kommentar (intern)', x["kommentar"])
 
-    col1, col2, col3, col4 = st.columns([1, 2, 1, 2])
-    with col1:
-        enable_einstieg = st.toggle("Einstiegsdatum setzen", True if x["einstiegsdatum"] is not None else False)
-    with col2:
-        if enable_einstieg:
-            einstiegsdatum = st.date_input("Eintsiegsdatum", value = x["einstiegsdatum"], format="DD.MM.YYYY")
+    st.write("Einstiegs- und Ausstiegsdatum, sowie längere Abwesenheiten können nur im Dekanat verändert werden.")
+    col1, col2, col3, col4 = st.columns([1, 2, 1, 2])    
+    if tools.is_dekanat(st.session_state.user):
+        with col1:
+            enable_einstieg = st.toggle("Einstiegsdatum setzen", True if x["einstiegsdatum"] is not None else False)
+        with col2:
+            if enable_einstieg:
+                einstiegsdatum = st.date_input("Eintsiegsdatum", value = x["einstiegsdatum"], format="DD.MM.YYYY")
+            else:
+                einstiegsdatum = None
+        with col3:
+            enable_ausstieg = st.toggle("Ausstiegsdatum setzen", True if x["ausstiegsdatum"] is not None else False)
+        with col4:
+            if enable_ausstieg:
+                ausstiegsdatum = st.date_input("Ausstiegsdatum", value = x["ausstiegsdatum"], format="DD.MM.YYYY")
+            else:
+                ausstiegsdatum = None
+        with col1:
+            enable_abwesend = st.toggle("Abwesenheit setzen", True if x["abwesend_start"] is not None else False)
+        if enable_abwesend:
+            with col2:
+                abwesend_start = st.date_input("Beginn der Abwesenheit", value = x["abwesend_start"], format="DD.MM.YYYY")
+            with col4:
+                abwesend_ende = st.date_input("Ende der Abwesenheit", value = x["abwesend_ende"], format="DD.MM.YYYY")
         else:
-            einstiegsdatum = None
+            abwesend_start = None
+            abwesend_ende = None
+
+    else:
+        einstiegsdatum = x["einstiegsdatum"]
+        ausstiegsdatum = x["ausstiegsdatum"]
+        abwesend_start = x["abwesend_start"]
+        abwesend_ende = x["abwesend_ende"]
+
     if einstiegsdatum is not None:
         einstiegsdatum = datetime.datetime.combine(einstiegsdatum, datetime.time.min)
-    
-    with col3:
-        enable_ausstieg = st.toggle("Ausstiegsdatum setzen", True if x["ausstiegsdatum"] is not None else False)
-    with col4:
-        if enable_ausstieg:
-            ausstiegsdatum = st.date_input("Ausstiegsdatum", value = x["ausstiegsdatum"], format="DD.MM.YYYY")
-        else:
-            ausstiegsdatum = None
     if ausstiegsdatum is not None:
         ausstiegsdatum = datetime.datetime.combine(ausstiegsdatum, datetime.time.max)
 
-
+    start_exists = (abwesend_start is not None)
+    ende_exists = (abwesend_ende is not None)
+    if start_exists:
+        abwesend_start = datetime.datetime.combine(abwesend_start, datetime.time.min)
+    if ende_exists:
+        abwesend_ende = datetime.datetime.combine(abwesend_ende, datetime.time.max)
+    if (start_exists and not ende_exists) or (ende_exists and not start_exists):
+        st.warning("Abwesenheiten können nur eingetragen werden, wenn sowohl Start als auch Ende vorhanden sind.")
+        abwesend_start = None
+        abwesed_ende = None
 
     semester_list = st.multiselect("Semester", [x["_id"] for x in util.semester.find(sort = [("kurzname", pymongo.DESCENDING)])], x["semester"], format_func = (lambda a: tools.repr(util.semester, a, False, True)), placeholder = "Bitte auswählen")
     se = list(util.semester.find({"_id": {"$in": semester_list}}, sort=[("rang", pymongo.ASCENDING)]))
     semester_list = [s["_id"] for s in se]
 
-    x_updated = ({"name": name, "name_en": name_en, "vorname": vorname, "name_prefix": name_prefix, "titel": titel, "kennung" : kennung, "kommentar": kommentar, "kommentar_html": kommentar_html, "tel1": tel1, "email1": email1, "raum1" : raum1, "gebaeude1" : gebaeude1, "raum2" : raum2, "gebaeude2" : gebaeude2, "url" : url, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "einstiegsdatum" : einstiegsdatum, "ausstiegsdatum" : ausstiegsdatum, "semester": semester_list, "code" : code, "bearbeitet" : bearbeitet})
+    x_updated = ({"name": name, "name_en": name_en, "vorname": vorname, "name_prefix": name_prefix, "titel": titel, "kennung" : kennung, "gender" : gender, "vorgesetzte" : vorgesetzte, "kommentar": kommentar, "kommentar_html": kommentar_html, "tel1": tel1, "email1": email1, "raum1" : raum1, "gebaeude1" : gebaeude1, "raum2" : raum2, "gebaeude2" : gebaeude2, "url" : url, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "einstiegsdatum" : einstiegsdatum, "ausstiegsdatum" : ausstiegsdatum, "abwesend_start" : abwesend_start, "abwesend_ende" : abwesend_ende, "semester": semester_list, "code" : code, "bearbeitet" : bearbeitet})
     if st.button('Speichern', type = 'primary', key="submit2"):
         submit2 = True
 

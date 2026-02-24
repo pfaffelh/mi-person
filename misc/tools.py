@@ -148,6 +148,12 @@ def can_edit(username):
     id = st.session_state.group.find_one({"name": app_name})["_id"]
     return (True if id in u["groups"] else False)
 
+def is_dekanat(username):
+    u = st.session_state.users.find_one({"rz": username})
+    id = st.session_state.group.find_one({"name": "dekanat"})["_id"]
+    return (True if id in u["groups"] else False)
+    #return (True if username in dekanat else False)
+
 def logout():
     st.session_state.logged_in = False
     util.logger.info(f"User {st.session_state.user} hat sich ausgeloggt.")

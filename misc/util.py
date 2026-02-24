@@ -198,6 +198,10 @@ def setup_session_state():
                 "hp_sichtbar": True, 
                 "einstiegsdatum" : None, 
                 "ausstiegsdatum" : None,
+                "gender" : "kA", 
+                "vorgesetzte" : [], 
+                "abwesend_start" : None, 
+                "abwesend_ende" : None,
                 "code": [], 
                 "semester": [st.session_state.semester_id], 
                 "veranstaltung": [] 
