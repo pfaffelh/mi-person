@@ -150,8 +150,8 @@ if st.session_state.logged_in:
     kommentar=st.text_input('Kommentar (intern)', x["kommentar"])
 
     st.write("Einstiegs- und Ausstiegsdatum, sowie längere Abwesenheiten können nur im Dekanat verändert werden.")
-    col1, col2, col3, col4 = st.columns([1, 2, 1, 2])    
     if tools.is_dekanat(st.session_state.user):
+        col1, col2, col3, col4 = st.columns([1, 2, 1, 2])    
         with col1:
             enable_einstieg = st.toggle("Einstiegsdatum setzen", True if x["einstiegsdatum"] is not None else False)
         with col2:
@@ -166,6 +166,7 @@ if st.session_state.logged_in:
                 ausstiegsdatum = st.date_input("Ausstiegsdatum", value = x["ausstiegsdatum"], format="DD.MM.YYYY")
             else:
                 ausstiegsdatum = None
+        col1, col2, col3, col4 = st.columns([1, 2, 1, 2])    
         with col1:
             enable_abwesend = st.toggle("Abwesenheit setzen", True if x["abwesend_start"] is not None else False)
         if enable_abwesend:
