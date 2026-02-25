@@ -132,7 +132,7 @@ if st.session_state.logged_in:
     if "Telefon" in ausgaben:
         dict["Telefon"] = [", ".join(x for x in [r["tel1"], r["tel2"]] if x) for r in result]
     if "Mail" in ausgaben:
-        dict["Mail"] = [", ".join(x for x in [r["mail1"], r["mail2"]] if x) for r in result]
+        dict["Mail"] = [", ".join(x for x in [r["email1"], r["email2"]] if x) for r in result]
     if "Vorgesetzte" in ausgaben:
         dict["Vorgesetzte"] = [", ".join(tools.repr(util.person, x, False, True) for x in r["vorgesetzte"]) for r in result]
     if "Raum" in ausgaben:
