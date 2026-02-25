@@ -47,60 +47,103 @@ if st.session_state.logged_in:
     # QUERY
     # Stichtag
     stichtag = st.date_input("Stichtag", value = datetime.datetime.today(), format="DD.MM.YYYY")
-    stichtag = datetime.datetime.combine(stichtag, datetime.time.min)
-
-    query = {"$and": [
-        {
-            "$or": [
-                {"einstiegsdatum": None},
-                {"einstiegsdatum": {"$lt": stichtag}}
-            ]
-        },
-        {
-            "$or": [
-                {"ausstiegsdatum": None},
-                {"ausstiegsdatum": {"$gt": stichtag}}
-            ]
-        }]}
+    stichtag = datetime.datetime.combine(stichtag, datetime.time(12,0))
+    temporaer = st.toggle("Temporäre Abwesenheiten mit berücksichtigen", False)
+    if temporaer:
+        query = {"$and": [
+            {
+                "$or": [
+                    {"einstiegsdatum": None},
+                    {"einstiegsdatum": {"$lt": stichtag}}
+                ]
+            },
+            {
+                "$or": [
+                    {"ausstiegsdatum": None},
+                    {"ausstiegsdatum": {"$gt": stichtag}}
+                ]
+            },
+            {
+                "$or": [
+                    {"abwesend_start": None},
+                    {"abwesend_start": {"$gt": stichtag}}
+                ]
+            },
+            {
+                "$or": [
+                    {"abwesend_ende": None},
+                    {"abwesend_ende": {"$lt": stichtag}}
+                ]
+            },
+            
+            ]}
+    else:
+        query = {"$and": [
+            {
+                "$or": [
+                    {"einstiegsdatum": None},
+                    {"einstiegsdatum": {"$lt": stichtag}}
+                ]
+            },
+            {
+                "$or": [
+                    {"ausstiegsdatum": None},
+                    {"ausstiegsdatum": {"$gt": stichtag}}
+                ]
+            }]}
 
     # Auswahl von Codes
     codes_list = []
-    for ck in list(util.personencodekategorie.find({}, sort = [("rang", pymongo.ASCENDING)])):
+    codekategorie_list = list(util.personencodekategorie.find({}, sort = [("rang", pymongo.ASCENDING)]))
+    for ck in codekategorie_list:
         loc = [x["_id"] for x in list(util.personencode.find({"codekategorie" : ck["_id"]}, sort = [("rang", pymongo.ASCENDING)]))]
         codes_list = codes_list + loc
 
-    code = st.multiselect("Zugehörigkeiten", codes_list, [], format_func = (lambda a: tools.repr(util.personencode, a, False, False)), placeholder = "Bitte auswählen")
+    code = st.multiselect("Zugehörigkeiten (d.h. es werden Personen gesucht, die all die angegebenen Zugehörigkeiten haben)", codes_list, [], format_func = (lambda a: tools.repr(util.personencode, a, False, False)), placeholder = "Bitte auswählen")
 
     # Erstellung der Query
     if code:
-        query["code"] = {"$elemMatch": { "$in": code}}
+        query["code"] = {"$all": code}
 
     result = list(util.person.find(query, sort=[("name", pymongo.ASCENDING), ("vorname", pymongo.ASCENDING)]))
 
     st.divider()
     st.write("Folgende Felder werden ausgegeben")
     # Auswahl der Ausgabe
-    col1, col2, col3, col4 = st.columns([1,1,1,1])
-    with col1:
-        ausgabe_emails = st.checkbox("Emails", True, key = "emails1")
-    with col2:
-        ausgabe_tels = st.checkbox("Telefonnummern", True)
-    with col3:
-        ausgabe_raeume = st.checkbox("Räume", True, key = "raeume1")
-    with col4:
-        ausgabe_url = st.checkbox("Homepage", True, key = "url1")
+
+    ausgabe_list_all = ["Name", "Titel", "RZ-Kennung", "Gender", "Telefon", "Mail", "Vorgesetzte", "Raum", "Homepage"]
+    codekategorie_list_all = [x["name_de"] for x in codekategorie_list]
+    ausgaben = st.multiselect("Was soll ausgegebn werden?", ausgabe_list_all + codekategorie_list_all, default = ["Name", "Mail"])
+
+    # TODO
+    # für dekanat: einstiegsdatum, ausstiegsdatum, abwesend_start, abwesend_ende
 
     dict = {}
-    dict["Nachname"] = [r["name"] for r in result]
-    dict["Vorname"] = [r["vorname"] for r in result]
-    if ausgabe_emails:
-        dict["Email"] = [f"{r['email1']}, {r['email2']}" if r["email2"] != "" else r['email1'] for r in result]
-    if ausgabe_tels:
-        dict["Telefon"] = [f"{r['tel1']}, {r['tel2']}" if r["tel2"] != "" else r['tel1'] for r in result]
-    if ausgabe_raeume:
-        dict["Raum"] = [f"{r['raum1']} ({tools.repr(util.gebaeude, r["gebaeude1"], False, True)}), {r['raum2']} ({tools.repr(util.gebaeude, r["gebaeude2"], False, True)})" if r["raum2"] != "" else f"{r['raum1']} ({tools.repr(util.gebaeude, r["gebaeude1"], False, True)})" for r in result]
-    if ausgabe_url:
+    if "Name" in ausgaben:
+        dict["Nachname"] = [r["name"] for r in result]
+        dict["Vorname"] = [r["vorname"] for r in result]
+        dict["name_prefix"] = [r["name_prefix"] for r in result]
+    if "Titel" in ausgaben:
+        dict["Titel"] = [r["titel"] for r in result]
+    if "RZ-Kennung" in ausgaben:
+        dict["RZ-Kennung"] = [r["kennung"] for r in result]
+    if "Gender" in ausgaben:
+        dict["Gender"] = [r["gender"] for r in result]
+    if "Telefon" in ausgaben:
+        dict["Telefon"] = [", ".join(x for x in [r["tel1"], r["tel2"]] if x) for r in result]
+    if "Mail" in ausgaben:
+        dict["Mail"] = [", ".join(x for x in [r["mail1"], r["mail2"]] if x) for r in result]
+    if "Vorgesetzte" in ausgaben:
+        dict["Vorgesetzte"] = [", ".join(tools.repr(util.person, x, False, True) for x in r["vorgesetzte"]) for r in result]
+    if "Raum" in ausgaben:
+        dict["Raum"] = [", ".join(f"{x[0]} ({tools.repr(util.gebaeude, x[1], False, True)})" for x in zip([r["raum1"], r["raum2"]], [r["gebaeude1"], r["gebaeude2"]]) if x[0]) for r in result]
+    if "Homepage" in ausgaben:
         dict["Homepage"] = [r["url"] for r in result]
+
+    for ck in codekategorie_list:
+        loc = [x["_id"] for x in list(util.personencode.find({"codekategorie" : ck["_id"]}, sort = [("rang", pymongo.ASCENDING)]))]
+        if ck["name_de"] in ausgaben:
+            dict[ck["name_de"]] = [", ".join(tools.repr(util.personencode, x, False, True) for x in r["code"] if x in loc) for r in result] 
 
     df = pd.DataFrame(dict)
 

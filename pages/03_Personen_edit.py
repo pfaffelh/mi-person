@@ -204,7 +204,7 @@ if st.session_state.logged_in:
     se = list(util.semester.find({"_id": {"$in": semester_list}}, sort=[("rang", pymongo.ASCENDING)]))
     semester_list = [s["_id"] for s in se]
 
-    x_updated = ({"name": name, "name_en": name_en, "vorname": vorname, "name_prefix": name_prefix, "titel": titel, "kennung" : kennung, "gender" : gender, "vorgesetzte" : vorgesetzte, "kommentar": kommentar, "kommentar_html": kommentar_html, "tel1": tel1, "email1": email1, "raum1" : raum1, "gebaeude1" : gebaeude1, "raum2" : raum2, "gebaeude2" : gebaeude2, "url" : url, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "einstiegsdatum" : einstiegsdatum, "ausstiegsdatum" : ausstiegsdatum, "abwesend_start" : abwesend_start, "abwesend_ende" : abwesend_ende, "semester": semester_list, "code" : code, "bearbeitet" : bearbeitet})
+    x_updated = ({"name": name, "name_en": name_en, "vorname": vorname, "name_prefix": name_prefix, "titel": titel, "kennung" : kennung, "gender" : gender, "vorgesetzte" : vorgesetzte, "kommentar": kommentar, "kommentar_html": kommentar_html, "tel1": tel1, "tel2": tel2, "email1": email2, "email1": email2, "raum1" : raum1, "raum2" : raum2, "gebaeude1" : gebaeude1, "gebaeude2" : gebaeude2, "url" : url, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "einstiegsdatum" : einstiegsdatum, "ausstiegsdatum" : ausstiegsdatum, "abwesend_start" : abwesend_start, "abwesend_ende" : abwesend_ende, "semester": semester_list, "code" : code, "bearbeitet" : bearbeitet})
     if st.button('Speichern', type = 'primary', key="submit2"):
         submit2 = True
 
