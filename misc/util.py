@@ -202,6 +202,9 @@ def setup_session_state():
                 "vorgesetzte" : [], 
                 "abwesend_start" : None, 
                 "abwesend_ende" : None,
+                "abschluss": "",
+                "kommentar_abwesend" : "",
+                "kommentar_stelle" : "",
                 "code": [], 
                 "semester": [st.session_state.semester_id], 
                 "veranstaltung": [] 
