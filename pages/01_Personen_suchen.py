@@ -111,7 +111,10 @@ if st.session_state.logged_in:
     st.write("Folgende Felder werden ausgegeben")
     # Auswahl der Ausgabe
 
-    ausgabe_list_all = ["Name", "Titel", "RZ-Kennung", "Gender", "Telefon", "Mail", "Vorgesetzte", "Raum", "Homepage"]
+    ausgabe_list_all = ["Name", "Titel", "Abschluss", "RZ-Kennung", "Gender", "Telefon", "Mail", "Vorgesetzte", "Raum", "Homepage"]
+    if tools.is_dekanat(st.session_state.user):
+        ausgabe_list_all = ausgabe_list_all + ["Vertragsdauer"]
+
     codekategorie_list_all = [x["name_de"] for x in codekategorie_list]
     ausgaben = st.multiselect("Was soll ausgegebn werden?", ausgabe_list_all + codekategorie_list_all, default = ["Name", "Mail"])
 
@@ -125,6 +128,8 @@ if st.session_state.logged_in:
         dict["name_prefix"] = [r["name_prefix"] for r in result]
     if "Titel" in ausgaben:
         dict["Titel"] = [r["titel"] for r in result]
+    if "Abschluss" in ausgaben:
+        dict["Abschluss"] = [r["abschluss"] for r in result]
     if "RZ-Kennung" in ausgaben:
         dict["RZ-Kennung"] = [r["kennung"] for r in result]
     if "Gender" in ausgaben:
@@ -139,11 +144,19 @@ if st.session_state.logged_in:
         dict["Raum"] = [", ".join(f"{x[0]} ({tools.repr(util.gebaeude, x[1], False, True)})" for x in zip([r["raum1"], r["raum2"]], [r["gebaeude1"], r["gebaeude2"]]) if x[0]) for r in result]
     if "Homepage" in ausgaben:
         dict["Homepage"] = [r["url"] for r in result]
+    if "Vertragsdauer" in ausgaben:
+        dict["Einstiegsdatum"] = ["" if r["einstiegsdatum"] is None else r["einstiegsdatum"].strftime("%d.%m.%Y") for r in result]
+        dict["Ausstiegsdatum"] = ["" if r["ausstiegsdatum"] is None else r["ausstiegsdatum"].strftime("%d.%m.%Y") for r in result]
+        dict["Kommentar Stelle"] = [r["kommentar_stelle"] for r in result]
+        dict["Abwesenheit Start"] = ["" if r["abwesend_start"] is None else r["abwesend_start"].strftime("%d.%m.%Y") for r in result]
+        dict["Abwesenheit Ende"] = ["" if r["abwesend_ende"] is None else r["abwesend_ende"].strftime("%d.%m.%Y") for r in result]
+        dict["Abwesenheit Kommentar"] = [r["kommentar_abwesend"] for r in result]
 
     for ck in codekategorie_list:
         loc = [x["_id"] for x in list(util.personencode.find({"codekategorie" : ck["_id"]}, sort = [("rang", pymongo.ASCENDING)]))]
         if ck["name_de"] in ausgaben:
             dict[ck["name_de"]] = [", ".join(tools.repr(util.personencode, x, False, True) for x in r["code"] if x in loc) for r in result] 
+
 
     df = pd.DataFrame(dict)
 

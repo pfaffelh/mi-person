@@ -110,7 +110,7 @@ if st.session_state.logged_in:
     col1, col2, col3 = st.columns([1, 1, 2])
     with col1:
         gender = st.selectbox("Gender auswählen", ["m", "w", "d", "kA"], ["m", "w", "d", "kA"].index(x["gender"]))
-    with col3:
+    with col2:
         kennung=st.text_input('RZ-Kennung', x["kennung"])
 
     otherperson = collection.find_one({"_id" : { "$ne" : x["_id"]}, "name" : name, "vorname" : vorname})
