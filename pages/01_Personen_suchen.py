@@ -43,7 +43,7 @@ st.session_state.page = "Suchen"
 if st.session_state.logged_in:
     st.header("Suche nach Personen")
     st.write("...auf die folgendes zutrifft:")
-    st.write("(Die einzelnen Zeilen sind mit 'und' verknüpft. Die eingegebenen Wörter im Textfeld sind mit 'oder' verknüpft.)")
+    st.write("(Die einzelnen Zeilen sind mit 'und' verknüpft.)")
     # QUERY
     # Stichtag
     stichtag = st.date_input("Stichtag", value = datetime.datetime.today(), format="DD.MM.YYYY")
@@ -99,7 +99,8 @@ if st.session_state.logged_in:
         loc = [x["_id"] for x in list(util.personencode.find({"codekategorie" : ck["_id"]}, sort = [("rang", pymongo.ASCENDING)]))]
         codes_list = codes_list + loc
 
-    code = st.multiselect("Zugehörigkeiten (d.h. es werden Personen gesucht, die all die angegebenen Zugehörigkeiten haben)", codes_list, [], format_func = (lambda a: tools.repr(util.personencode, a, False, False)), placeholder = "Bitte auswählen")
+    default = [util.personencode.find_one({"name" : "Wissenschaftlicher Dienst"})["_id"]]
+    code = st.multiselect("Zugehörigkeiten (d.h. es werden Personen gesucht, die all die angegebenen Zugehörigkeiten haben)", codes_list, default, format_func = (lambda a: tools.repr(util.personencode, a, False, False)), placeholder = "Bitte auswählen")
 
     # Erstellung der Query
     if code:
