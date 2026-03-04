@@ -29,7 +29,7 @@ tools.display_navigation()
 
 # Es geht hier vor allem um diese Collection:
 collection = util.person
-geb = list(util.gebaeude.find({"sichtbar": True}, sort=[("name_de", pymongo.ASCENDING)]))
+geb = list(util.gebaeude.find({}, sort=[("name_de", pymongo.ASCENDING)]))
 
 new_entry = False
 submit1 = submit2 = False
