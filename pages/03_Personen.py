@@ -43,18 +43,24 @@ if st.session_state.logged_in:
     
     st.session_state.code_list = st.multiselect("Codes", all_codes, statusgruppen, format_func = (lambda a: tools.repr(util.personencode, a, show_collection=False)), placeholder = "Bitte auswählen", help = "Es werden nur Personen angezeigt, die einen der genannten Codes haben.", key = "key_code_list")
      
-    aktuell = st.toggle("Aktuelle Personen anzeigen", True)
+    alle = st.toggle("Alle Personen anzeigen", False)
+    aktuell = st.toggle("Aktuelle Personen anzeigen", False if alle else True)
     ehemalig = st.toggle("Ehemalige Personen anzeigen", False)
 
     queries = []
     if st.session_state["code_list"] != []:
         queries.append({"code" : {"$elemMatch": {"$in": st.session_state["code_list"]}}})
-    if aktuell:
-        queries.append({"$or": [{"ausstiegsdatum": None}, {"ausstiegsdatum": {"$gt": datetime.today()}}]})
-    if ehemalig:
-        queries.append({"$or": [{"ausstiegsdatum": None}, {"ausstiegsdatum": {"$lt": datetime.today()}}]})
+    if alle: 
+        queries = []
+        aktuell = False
+        ehemalig = False
+    else:
+        if aktuell:
+            queries.append({"$or": [{"ausstiegsdatum": None}, {"ausstiegsdatum": {"$gt": datetime.today()}}]})
+        if ehemalig:
+            queries.append({"$or": [{"ausstiegsdatum": None}, {"ausstiegsdatum": {"$lt": datetime.today()}}]})
     # st.write(queries)
-    query = {"$and" : queries} if queries != [] else {}
+    query = {"$or" : queries} if queries != [] else {}
 
     y = list(collection.find(query, sort=[("name", pymongo.ASCENDING), ("vorname", pymongo.ASCENDING)]))
     for x in y:
