@@ -1,6 +1,5 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
-import time
 import pymongo
 import pandas as pd
 
@@ -79,7 +78,6 @@ if st.session_state.logged_in:
                     submit = st.form_submit_button('Speichern', type = 'primary')
                     if submit:
                         tools.update_confirm(collection, x, x_updated, )
-                        time.sleep(2)
                         st.session_state.edit = ""
                         st.rerun()                      
 
@@ -131,7 +129,7 @@ if st.session_state.logged_in:
                         st.write("Eintrag wirklich löschen?  \nEs gibt keine abhängigen Items.")
                     colu1, colu2, colu3 = st.columns([1,1,1])
                     with colu1:
-                        submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}", disabled = True if x["_id"] == util.leer[util.codekategorie] else False)
+                        submit = st.button(label = "Ja", type = 'primary', key = f"delete-{x['_id']}", disabled = True if x["_id"] == st.session_state.leer[util.codekategorie] else False)
                     if submit:
                         tools.delete_item_update_dependent_items(collection, x["_id"], False)
                         st.rerun()
@@ -146,10 +144,9 @@ if st.session_state.logged_in:
                     kommentar=st.text_area('Kommentar', x["kommentar"])
                     code = []
                     x_updated = {"name_de": name_de, "name_en": name_en, "beschreibung_de": beschreibung_de, "kommentar": kommentar, "code": []}
-                    submit = st.form_submit_button('Speichern', type = 'primary', disabled = True if x["_id"] == util.leer[util.codekategorie] else False)
+                    submit = st.form_submit_button('Speichern', type = 'primary', disabled = True if x["_id"] == st.session_state.leer[util.codekategorie] else False)
                     if submit:
                         tools.update_confirm(collection, x, x_updated, )
-                        time.sleep(2)
                         st.session_state.edit = ""
                         st.rerun()                      
 

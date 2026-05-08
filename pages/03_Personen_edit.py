@@ -1,6 +1,5 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page 
-import time
 from operator import itemgetter
 import pymongo
 import datetime
@@ -77,7 +76,7 @@ if st.session_state.logged_in:
                 with colu3: 
                     st.button(label="Nein", on_click = st.success, args=("Nicht gelöscht!",), key = f"not-deleted-{x['_id']}")
 
-    sichtbar = True #st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == util.leer[collection] else False))
+    sichtbar = True #st.checkbox("In Auswahlmenüs sichtbar", x["sichtbar"], disabled = (True if x["_id"] == st.session_state.leer[collection] else False))
     st.write(x["bearbeitet"])
     hp_sichtbar = st.checkbox("Auf Homepages sichtbar", x["hp_sichtbar"])
     # ldap = st.checkbox("Ins Instituts-LDAP eintragen", x["ldap"], help = "Z.B. für Scan-to-Mail-Funktion der Drucker.")
@@ -219,9 +218,8 @@ if st.session_state.logged_in:
     if submit1 or submit2:
         if new_entry:
             tools.new(collection, ini = x_updated, switch=False)
-        else: 
+        else:
             tools.update_confirm(collection, x, x_updated, reset=False)
-        time.sleep(1)
 
 else: 
     switch_page("Personen")
