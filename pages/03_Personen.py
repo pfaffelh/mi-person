@@ -48,18 +48,22 @@ if st.session_state.logged_in:
 
     queries = []
     if st.session_state["code_list"] != []:
-        queries.append({"code" : {"$elemMatch": {"$in": st.session_state["code_list"]}}})
-    if alle: 
-        queries = []
+        queries.append({"code": {"$in": st.session_state["code_list"]}})
+    if alle:
         aktuell = False
         ehemalig = False
     else:
+        # aktuell/ehemalig sind eine Vereinigung ($or) und werden als Ganzes
+        # mit dem Code-Filter geschnitten ($and).
+        date_queries = []
         if aktuell:
-            queries.append({"$or": [{"ausstiegsdatum": None}, {"ausstiegsdatum": {"$gt": datetime.today()}}]})
+            date_queries.append({"$or": [{"ausstiegsdatum": None}, {"ausstiegsdatum": {"$gt": datetime.today()}}]})
         if ehemalig:
-            queries.append({"$or": [{"ausstiegsdatum": None}, {"ausstiegsdatum": {"$lt": datetime.today()}}]})
+            date_queries.append({"ausstiegsdatum": {"$lt": datetime.today()}})
+        if date_queries:
+            queries.append({"$or": date_queries})
     # st.write(queries)
-    query = {"$or" : queries} if queries != [] else {}
+    query = {"$and" : queries} if queries != [] else {}
 
     y = list(collection.find(query, sort=[("name", pymongo.ASCENDING), ("vorname", pymongo.ASCENDING)]))
     for x in y:
