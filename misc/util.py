@@ -174,6 +174,7 @@ def setup_session_state():
     leer = st.session_state.leer
 
     semester_id = st.session_state.semester_id
+    bearbeitet_neu = f"Angelegt von {st.session_state.username} am {datetime.now().strftime('%d.%m.%Y um %H:%M:%S.')}"
     st.session_state.new = {
         gebaeude: {"name_de": "neu",
                 "name_en": "",
@@ -206,7 +207,7 @@ def setup_session_state():
                 "gebaeude1": leer[gebaeude],
                 "gebaeude2": leer[gebaeude],
                 "kommentar_html": "",
-                "bearbeitet": f"Angelegt von {st.session_state.username} am {datetime.now().strftime('%d.%m.%Y um %H:%M:%S.')}",
+                "bearbeitet": bearbeitet_neu,
                 "kommentar": "",
                 "url": "",
                 "sichtbar": True,
@@ -225,6 +226,7 @@ def setup_session_state():
                 "veranstaltung": []
         },
         studiengang: {"name": "Neuer Studiengang",
+                "bearbeitet": bearbeitet_neu,
                 "kurzname": "",
                 "kommentar": "",
                 "sichtbar": True,
@@ -232,6 +234,7 @@ def setup_session_state():
                 "semester": []
         },
         modul: {"name_de": "Neues Modul",
+                "bearbeitet": bearbeitet_neu,
                 "name_en": "",
                 "kurzname": "",
                 "kommentar": "",
@@ -239,6 +242,7 @@ def setup_session_state():
                 "studiengang": []
         },
         rubrik: {"titel_de": "Neue Rubrik",
+                "bearbeitet": bearbeitet_neu,
                 "titel_en": "",
                 "untertitel_de": "",
                 "untertitel_en": "",
@@ -256,7 +260,7 @@ def setup_session_state():
                 "beschreibung_en": "",
                 "codekategorie": leer[personencodekategorie],
                 "kommentar_html": "",
-                "bearbeitet": f"Angelegt von {st.session_state.username} am {datetime.now().strftime('%d.%m.%Y um %H:%M:%S.')}",
+                "bearbeitet": bearbeitet_neu,
                 "kommentar": ""
         },
         personencodekategorie:  {
@@ -264,10 +268,11 @@ def setup_session_state():
                 "name_en": "",
                 "beschreibung_de": "",
                 "beschreibung_en": "",
-                "bearbeitet": f"Angelegt von {st.session_state.username} am {datetime.now().strftime('%d.%m.%Y um %H:%M:%S.')}",
+                "bearbeitet": bearbeitet_neu,
                 "kommentar": ""
         },
         code:  {"name": "",
+                "bearbeitet": bearbeitet_neu,
                 "beschreibung_de": "Neuer Code",
                 "beschreibung_en": "",
                 "codekategorie": leer[personencodekategorie],
@@ -276,6 +281,7 @@ def setup_session_state():
                 "semester": st.session_state.semester_id
         },
         codekategorie:  {
+                "bearbeitet": bearbeitet_neu,
                 "name_de": "Neu",
                 "name_en": "",
                 "beschreibung_de": "",
@@ -287,12 +293,14 @@ def setup_session_state():
                 "komm_sichtbar" : False
         },
         terminart: {"name_de": "Neu",
+                    "bearbeitet": bearbeitet_neu,
                     "name_en": "",
                     "hp_sichtbar": True,
                     "komm_sichtbar": True,
                     "cal_sichtbar": False
         },
         anforderung: {"name_de": "Neu",
+                    "bearbeitet": bearbeitet_neu,
                     "name_en": "",
                     "anforderungskategorie": leer[anforderungkategorie],
                     "kommentar": "",
@@ -300,6 +308,7 @@ def setup_session_state():
                     "semester": [st.session_state.semester_id]
         },
         anforderungkategorie: {
+            "bearbeitet": bearbeitet_neu,
             "name_de": "Neu",
             "name_en": "",
             "kommentar": "",
@@ -307,12 +316,14 @@ def setup_session_state():
             "kurzname" : ""
         },
         planungveranstaltung: {
+            "bearbeitet": bearbeitet_neu,
             "name": "",
             "sws": "",
             "regel": "Jedes Wintersemester",
             "kommentar": ""
         },
         planung: {
+            "bearbeitet": bearbeitet_neu,
             "dozent": [],
             "sem": "",
             "kommentar": "",

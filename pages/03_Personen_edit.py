@@ -20,9 +20,6 @@ import misc.tools as tools
 from misc.css_styles import init_css
 init_css()
 
-date_format = '%d.%m.%Y um %H:%M:%S.'
-bearbeitet = f"Zuletzt bearbeitet von {st.session_state.username} am {datetime.datetime.now().strftime(date_format)}"
-
 # Navigation in Sidebar anzeigen
 tools.display_navigation()
 
@@ -50,6 +47,7 @@ if st.session_state.logged_in:
 
     else:
         x = collection.find_one({"_id": st.session_state.edit})
+        tools.merke_bearbeitet(x)
         st.header(tools.repr(collection, x["_id"], False))
 
     col1, col2, col3, col4 = st.columns([1, 1, 2, 1])
@@ -211,7 +209,7 @@ if st.session_state.logged_in:
     se = list(util.semester.find({"_id": {"$in": semester_list}}, sort=[("rang", pymongo.ASCENDING)]))
     semester_list = [s["_id"] for s in se]
 
-    x_updated = ({"name": name, "name_en": name_en, "vorname": vorname, "name_prefix": name_prefix, "titel": titel, "abschluss": abschluss, "kennung" : kennung, "gender" : gender, "vorgesetzte" : vorgesetzte, "kommentar": kommentar, "kommentar_abwesend": kommentar_abwesend, "kommentar_stelle": kommentar_stelle, "kommentar_html": kommentar_html, "tel1": tel1, "tel2": tel2, "email1": email1, "email2": email2, "raum1" : raum1, "raum2" : raum2, "gebaeude1" : gebaeude1, "gebaeude2" : gebaeude2, "url" : url, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "einstiegsdatum" : einstiegsdatum, "ausstiegsdatum" : ausstiegsdatum, "abwesend_start" : abwesend_start, "abwesend_ende" : abwesend_ende, "semester": semester_list, "code" : code, "bearbeitet" : bearbeitet})
+    x_updated = ({"name": name, "name_en": name_en, "vorname": vorname, "name_prefix": name_prefix, "titel": titel, "abschluss": abschluss, "kennung" : kennung, "gender" : gender, "vorgesetzte" : vorgesetzte, "kommentar": kommentar, "kommentar_abwesend": kommentar_abwesend, "kommentar_stelle": kommentar_stelle, "kommentar_html": kommentar_html, "tel1": tel1, "tel2": tel2, "email1": email1, "email2": email2, "raum1" : raum1, "raum2" : raum2, "gebaeude1" : gebaeude1, "gebaeude2" : gebaeude2, "url" : url, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "einstiegsdatum" : einstiegsdatum, "ausstiegsdatum" : ausstiegsdatum, "abwesend_start" : abwesend_start, "abwesend_ende" : abwesend_ende, "semester": semester_list, "code" : code})
     if st.button('Speichern', type = 'primary', key="submit2"):
         submit2 = True
 
@@ -219,7 +217,8 @@ if st.session_state.logged_in:
         if new_entry:
             tools.new(collection, ini = x_updated, switch=False)
         else:
-            tools.update_confirm(collection, x, x_updated, reset=False)
+            if not tools.update_confirm(collection, x, x_updated, reset=False):
+                st.rerun() # Konflikt: neu laden, damit Warnung und aktueller Stand erscheinen
 
 else: 
     switch_page("Personen")

@@ -15,9 +15,20 @@ from datetime import datetime
 def flash(msg):
     st.session_state.setdefault("_pending_toasts", []).append(msg)
 
+# Anders als flash() (kurzer Toast) bleibt diese Warnung dauerhaft oben auf
+# der Seite stehen — bei jedem Rerun, bis wieder erfolgreich gespeichert
+# wurde (update_confirm räumt sie dann ab).
+def warnung_setzen(msg):
+    st.session_state.speicher_warnung = msg
+
+def warnung_loeschen():
+    st.session_state.speicher_warnung = None
+
 def show_pending_toasts():
     for msg in st.session_state.pop("_pending_toasts", []):
         st.toast(msg)
+    if st.session_state.get("speicher_warnung"):
+        st.warning(st.session_state.speicher_warnung)
 
 # Dedupliziert find_one-Lookups innerhalb eines Reruns (und über kurze
 # Rerun-Folgen via TTL). Streamlits Hasher kennt bson.ObjectId nicht, daher
@@ -53,8 +64,10 @@ def move_up_list(collection, id, field, element):
         x = list[i-1]
         list[i-1] = element
         list[i] = x
-    collection.update_one({"_id": id}, { "$set": {field: list}})
-    _doc.clear()
+        stempel = bearbeitet_jetzt()
+        collection.update_one({"_id": id}, { "$set": {field: list, "bearbeitet": stempel}})
+        st.session_state.setdefault("bearbeitet_gesehen", {})[id] = stempel
+        _doc.clear()
 
 def move_down_list(collection, id, field, element):
     list = collection.find_one({"_id": id})[field]
@@ -63,20 +76,66 @@ def move_down_list(collection, id, field, element):
         x = list[i+1]
         list[i+1] = element
         list[i] = x
-    collection.update_one({"_id": id}, { "$set": {field: list}})
-    _doc.clear()
+        stempel = bearbeitet_jetzt()
+        collection.update_one({"_id": id}, { "$set": {field: list, "bearbeitet": stempel}})
+        st.session_state.setdefault("bearbeitet_gesehen", {})[id] = stempel
+        _doc.clear()
 
 def remove_from_list(collection, id, field, element):
     collection.update_one({"_id": id}, {"$pull": {field: element}})
     _doc.clear()
 
+# Inhalt des Felds "bearbeitet", das jede Collection führt.
+def bearbeitet_jetzt(angelegt = False):
+    aktion = "Angelegt" if angelegt else "Zuletzt bearbeitet"
+    return f"{aktion} von {st.session_state.username} am {datetime.now().strftime('%d.%m.%Y um %H:%M:%S.')}"
+
+# Merkt sich, welchen "bearbeitet"-Stand eines Items dieser User zuerst gesehen
+# hat. Gegen diesen Stand prüft update_confirm die Konfliktfreiheit: x selbst
+# taugt nicht als Vergleichsbasis, weil die Edit-Seiten x bei jedem Rerun (auch
+# dem des Speichern-Klicks selbst) frisch aus der DB laden. Auf jeder Edit-Seite
+# direkt nach dem Laden von x aufrufen.
+def merke_bearbeitet(x):
+    if x.get("_id") == "new":
+        return
+    st.session_state.setdefault("bearbeitet_gesehen", {}).setdefault(x["_id"], x.get("bearbeitet"))
+
+# Speichert x_updated in x, mit Konfliktprüfung über das "bearbeitet"-Feld
+# (Optimistic Locking): Geschrieben wird nur, wenn das Dokument seit dem Laden
+# von x nicht anderweitig verändert wurde. Andernfalls bleibt der fremde Stand
+# erhalten und der User bekommt eine Warnung mit dem aktuellen "bearbeitet".
 def update_confirm(collection, x, x_updated, reset = True):
-    util.logger.info(f"User {st.session_state.user} hat in {st.session_state.collection_name[collection]} Item {repr(collection, x['_id'])} geändert.")
-    collection.update_one({"_id" : x["_id"]}, {"$set": x_updated })
+    gesehen = st.session_state.setdefault("bearbeitet_gesehen", {})
+    filter = {"_id": x["_id"]}
+    if x["_id"] in gesehen or "bearbeitet" in x:
+        filter["bearbeitet"] = gesehen.get(x["_id"], x.get("bearbeitet"))
+    stempel = bearbeitet_jetzt()
+    res = collection.update_one(filter, {"$set": {**x_updated, "bearbeitet": stempel}})
     _doc.clear()
-    if reset:
-        reset_vars("")
-    flash("🎉 Erfolgreich geändert!")
+    if res.matched_count == 0:
+        aktuell = collection.find_one({"_id": x["_id"]})
+        if aktuell is None:
+            warnung_setzen("⚠️ Nicht gespeichert! Der Eintrag wurde zwischenzeitlich gelöscht.")
+            util.logger.info(f"User {st.session_state.user}: Speichern in {st.session_state.collection_name[collection]} fehlgeschlagen, Item wurde zwischenzeitlich gelöscht.")
+        else:
+            # Aktuellen Stand als gesehen merken: der User bekommt die Warnung,
+            # sieht nach dem Rerun den neuen Stand, und der nächste Speichern-
+            # Versuch geht durch.
+            gesehen[x["_id"]] = aktuell["bearbeitet"]
+            warnung_setzen(f"⚠️ Nicht gespeichert! Der Eintrag wurde zwischenzeitlich geändert ({aktuell['bearbeitet']}) "
+                           "Die Anzeige wurde auf den aktuellen Stand gebracht; Deine noch nicht gespeicherten Eingaben stehen weiterhin in den Feldern. "
+                           "Du kannst jetzt erneut speichern — Achtung: Felder, die ihr beide geändert habt, werden dabei mit Deinem Stand überschrieben.")
+            util.logger.info(f"User {st.session_state.user}: Speicherkonflikt in {st.session_state.collection_name[collection]} bei Item {repr(collection, x['_id'])}.")
+    else:
+        gesehen[x["_id"]] = stempel
+        warnung_loeschen()
+        util.logger.info(f"User {st.session_state.user} hat in {st.session_state.collection_name[collection]} Item {repr(collection, x['_id'])} geändert.")
+        flash("🎉 Erfolgreich geändert!")
+        # reset (verlässt den Edit-Kontext) nur bei Erfolg: Bei einem Konflikt
+        # soll der User auf der Edit-Seite bleiben.
+        if reset:
+            reset_vars("")
+    return res.matched_count > 0
 
 def new(collection, ini = {}, switch = True):
     if list(collection.find({ "rang" : { "$exists": True }})) != []:
@@ -86,7 +145,10 @@ def new(collection, ini = {}, switch = True):
     for key, value in ini.items():
         st.session_state.new[collection][key] = value
     st.session_state.new[collection].pop("_id", None)
+    stempel = bearbeitet_jetzt(angelegt = True)
+    st.session_state.new[collection]["bearbeitet"] = stempel
     x = collection.insert_one(st.session_state.new[collection])
+    st.session_state.setdefault("bearbeitet_gesehen", {})[x.inserted_id] = stempel
     _doc.clear()
     st.session_state.edit=x.inserted_id
     util.logger.info(f"User {st.session_state.user} hat in {st.session_state.collection_name[collection]} ein neues Item angelegt.")
@@ -144,6 +206,8 @@ def delete_item_update_dependent_items(collection, id, switch = True):
 
 # Zum Einstellen der Codes für das gesamte Semester
 def codes_uebernehmen(df):
+    stempel = bearbeitet_jetzt()
+    gesehen = st.session_state.setdefault("bearbeitet_gesehen", {})
     for p in df.to_dict(orient='records'):
         pid = ObjectId(p["_id"])
         del p["_id"]
@@ -151,7 +215,8 @@ def codes_uebernehmen(df):
         code_all = [ObjectId(key) for key in p.keys()]
         co = [ObjectId(key) for key, value in p.items() if value]
         util.person.update_one({"_id" : pid}, {"$pull" : {"code" : { "$in" : code_all}}})
-        util.person.update_one({"_id" : pid}, {"$push" : {"code" : { "$each" : co}}})
+        util.person.update_one({"_id" : pid}, {"$push" : {"code" : { "$each" : co}}, "$set" : {"bearbeitet" : stempel}})
+        gesehen[pid] = stempel
     _doc.clear()
 
 # Die Authentifizierung gegen den Uni-LDAP-Server
@@ -187,6 +252,7 @@ def logout():
 
 def reset_vars(text=""):
     st.session_state.edit = ""
+    warnung_loeschen()
     if text != "":
         flash(text)
 
