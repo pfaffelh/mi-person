@@ -256,6 +256,7 @@ def setup_session_state():
                 "beschreibung_en": "",
                 "codekategorie": leer[personencodekategorie],
                 "kommentar_html": "",
+                "bearbeitet": f"Angelegt von {st.session_state.username} am {datetime.now().strftime('%d.%m.%Y um %H:%M:%S.')}",
                 "kommentar": ""
         },
         personencodekategorie:  {
@@ -263,6 +264,7 @@ def setup_session_state():
                 "name_en": "",
                 "beschreibung_de": "",
                 "beschreibung_en": "",
+                "bearbeitet": f"Angelegt von {st.session_state.username} am {datetime.now().strftime('%d.%m.%Y um %H:%M:%S.')}",
                 "kommentar": ""
         },
         code:  {"name": "",

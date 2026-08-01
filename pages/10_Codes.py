@@ -1,7 +1,8 @@
 import streamlit as st
-from streamlit_extras.switch_page_button import switch_page 
+from streamlit_extras.switch_page_button import switch_page
 import pymongo
 import pandas as pd
+import datetime
 
 # Seiten-Layout
 st.set_page_config(page_title="PERSON", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
@@ -27,6 +28,9 @@ tools.display_navigation()
 collection = util.personencode
 # Ab hier wird die Webseite erzeugt
 if st.session_state.logged_in:
+    date_format = '%d.%m.%Y um %H:%M:%S.'
+    bearbeitet = f"Zuletzt bearbeitet von {st.session_state.username} am {datetime.datetime.now().strftime(date_format)}"
+
     st.header("Grundeinstellungen der Personendatenbank")
 
     st.header("Codes")
@@ -74,7 +78,7 @@ if st.session_state.logged_in:
                     beschreibung_en=st.text_input('Beschreibung (en)', x["beschreibung_en"], key=f'beschreibung-en-{x["_id"]}')
                     kommentar_html=st.text_area('Kommentar für Webpage', x["kommentar_html"])
                     kommentar=st.text_area('Kommentar', x["kommentar"])
-                    x_updated = {"codekategorie": codekategorie, "name": name, "beschreibung_de": beschreibung_de, "beschreibung_en": beschreibung_en, "kommentar": kommentar}
+                    x_updated = {"codekategorie": codekategorie, "name": name, "beschreibung_de": beschreibung_de, "beschreibung_en": beschreibung_en, "kommentar_html": kommentar_html, "kommentar": kommentar, "bearbeitet": bearbeitet}
                     submit = st.form_submit_button('Speichern', type = 'primary')
                     if submit:
                         tools.update_confirm(collection, x, x_updated, )
@@ -142,8 +146,7 @@ if st.session_state.logged_in:
                     beschreibung_de=st.text_input('Beschreibung (de)', x["beschreibung_de"], key=f'beschreibung-de-{x["_id"]}')
                     beschreibung_en=st.text_input('Beschreibung (en)', x["beschreibung_en"], key=f'beschreibung-en-{x["_id"]}')
                     kommentar=st.text_area('Kommentar', x["kommentar"])
-                    code = []
-                    x_updated = {"name_de": name_de, "name_en": name_en, "beschreibung_de": beschreibung_de, "kommentar": kommentar, "code": []}
+                    x_updated = {"name_de": name_de, "name_en": name_en, "beschreibung_de": beschreibung_de, "beschreibung_en": beschreibung_en, "kommentar": kommentar, "bearbeitet": bearbeitet}
                     submit = st.form_submit_button('Speichern', type = 'primary', disabled = True if x["_id"] == st.session_state.leer[util.codekategorie] else False)
                     if submit:
                         tools.update_confirm(collection, x, x_updated, )
