@@ -1,0 +1,183 @@
+\documentclass{beamer}
+\usepackage{background}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
+\usepackage{tabularx}
+
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath, amsfonts}
+
+\usepackage{xcolor, graphics}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue}
+\usepackage{tcolorbox}
+\usepackage{fontawesome5}
+
+%% ------------------------- document -------------------------------%
+
+\title{Die Personaldatenbank des Mathematischen Instituts}
+\author{}
+\institute{Universit\"at Freiburg}
+\date{25.\ September 2026}
+
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\definecolor{darkgreen}{rgb}{0.0,0.4,0.0}
+\definecolor{darkblue}{rgb}{0.1,0.1,0.5}
+\definecolor{darkred}{rgb}{0.5,0.0,0.0}
+\definecolor{middle_blue}{rgb}{0.0,0.0,0.8}
+\definecolor{middle_red}{rgb}{0.8,0.0,0.0}
+\definecolor{middle_green}{rgb}{0.0,0.6,0.0}
+\definecolor{gray}{rgb}{0.35,0.35,0.35}
+\setbeamercolor{title}{fg=white}
+\setbeamercolor{author}{fg=white}
+\setbeamercolor{date}{fg=white}
+\setbeamercolor{institute}{fg=white}
+
+\begin{document}
+
+\backgroundsetup{scale=1, color=black, opacity=1, angle=0, contents={\vspace*{3cm}\hspace*{-10cm}\includegraphics[width=1.80\paperwidth,height=1.33\paperheight]{hintergrund_vortrag1.pdf}}}
+
+\setbeamertemplate{background}{\BgMaterial}
+\begin{frame}
+  \titlepage
+\end{frame}
+
+
+\backgroundsetup{scale=1, color=black, opacity=1, angle=0, contents={\hspace*{3.5cm}\includegraphics[width=1.33\paperwidth,height=\paperheight]{hintergrund_vortrag2.pdf}}}
+
+\setbeamertemplate{background}{\BgMaterial}
+
+%% ====================================================================
+%% Geschichte
+%% ====================================================================
+\begin{frame}
+  \frametitle{Geschichte}
+
+  \begin{tikzpicture}[
+      node distance=6mm,
+      yr/.style={font=\bfseries\color{middle_blue}, anchor=east, minimum width=16mm},
+      ev/.style={text width=.72\textwidth, anchor=west, font=\small}]
+    \draw[very thick, middle_blue!60] (0,0.7) -- (0,-5.0);
+    \foreach \y in {0,-2.3,-4.3} \fill[middle_blue] (0,\y) circle (3pt);
+
+    \node[yr] at (-0.3,0) {vor 2006};
+    \node[ev] at (0.3,0) {Personaldatenbank aufgesetzt \\
+      \textcolor{gray}{Ziel: Vereinheitlichung der Homepage} \\
+      Alte Anwendung zur Bef\"ullung der Datenbank, Zugriff durch Sekretariate};
+
+    \node[yr] at (-0.3,-2.3) {bis 2025};
+    \node[ev] at (0.3,-2.3) {Alte Homepage: Bef\"ullung aller \glqq Personenseiten\grqq{}
+      der Abteilungen durch die Datenbank};
+
+    \node[yr] at (-0.3,-4.3) {ab 2025};
+    \node[ev] at (0.3,-4.3) {\textbf{Neuprogrammierung} der Anwendung \\
+      gleichzeitig Aufnahme von \textbf{Vertragsdaten} durch das Dekanat \\
+      Umstellung der Homepage und damit \"Anderung der Personenseiten};
+  \end{tikzpicture}
+\end{frame}
+
+%% ====================================================================
+%% Funktionsweise
+%% ====================================================================
+\begin{frame}[t]
+  \frametitle{Funktionsweise der Anwendung}
+
+  \begin{itemize}
+    \item[\faKey] \textbf{Zugang:} Sysadmins geben Zugriff (evtl.\ in R\"ucksprache)
+    \medskip
+    \item[\faUser] \textbf{Datenfelder allgemein:}\\
+      {\small Name, Vorname, Titel, Abschluss, Gender, RZ-Kennung,
+       E-Mail, Telefon, Geb\"aude/Raum, Homepage, Kommentar (Homepage / intern),
+       \glqq auf Homepage sichtbar\grqq}
+    \medskip
+    \item[\faLock] \textbf{Nur Dekanat:}\\
+      {\small Einstiegs- und Ausstiegsdatum, Kommentar zur Stelle,
+       l\"angere Abwesenheiten}
+    \medskip
+    \item[\faTags] \textbf{\glqq Codes\grqq} werden Personen zugeordnet,\\
+      {\small z.B.\ \glqq Abteilung Logik\grqq{} oder \glqq deutschsprachig\grqq{}
+       \quad \textcolor{gray}{(Kategorien: Statusgruppe, Abteilung, Sprache, \dots)}}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[t]
+  \frametitle{Such- und Export-Funktion}
+
+  \begin{itemize}
+    \setlength{\itemsep}{6pt}
+    \item[\faSearch] Suche nach Personen mit \textbf{allen} angegebenen Codes
+    \item[\faCalendar] Stichtag w\"ahlbar: wer ist zu diesem Datum am Institut?
+    \item[\faTable] Auswahl der ausgegebenen Spalten (z.B.\ Name, Mail, Abteilung, \dots)
+    \item[\faFileExcel] Export als Excel-Datei
+    \item[\textcolor{middle_red}{\faExclamationTriangle}] \textbf{Der Verlauf wird nicht gespeichert.}\\
+      {\small Gespeichert wird nur der aktuelle Stand (plus letzter Bearbeitungsstempel).}
+  \end{itemize}
+\end{frame}
+
+%% ====================================================================
+%% Bedarfe
+%% ====================================================================
+\begin{frame}[t]
+  \frametitle{Bedarfe an die Datenbank}
+
+  \renewcommand{\arraystretch}{1.5}
+  \begin{tabularx}{\textwidth}{@{}>{\bfseries\color{darkblue}}l X@{}}
+    \toprule
+    Studiengangkoordination & Veranstaltungsplanung \\
+    Pr\"ufungsamt           & Einteilung von Beisitzen (und Pr\"ufern) \\
+    Dekanat                 & Zentrale F\"uhrung Personalakten, Ressourcenplanung, etc. \\
+    Systemadministratoren   & Scan-to-Mail-Funktion der Drucker, Thunderbird-Adressbuch \\
+    Abteilungen             & Teilweise Bef\"ullung der \glqq Personenseiten\grqq{}
+                              (Stochastik, RM?) \\
+    \bottomrule
+  \end{tabularx}
+
+  \vfill
+  \textbf{Evtl.\ weitere Bedarfe:}
+  \begin{itemize}
+    \item \"Uberblick \"uber Lehrdeputate (Studiendekan)
+    \item Abgleich mit Mail-Verteilern
+    \item Abgleich mit Transponderverwaltung
+  \end{itemize}
+\end{frame}
+
+%% ====================================================================
+%% Offene Fragen
+%% ====================================================================
+\begin{frame}
+  \frametitle{Offene Fragen (Ablauf, Zuständigkeiten)}
+
+  \bigskip
+  \begin{tcolorbox}[colback=blue!4, colframe=middle_blue!60, boxrule=0.9pt, arc=3pt]
+    \begin{itemize}
+      \item[\faQuestionCircle] \textbf{Wer legt eine Person an?}\\
+        {\small\color{gray} Markus Junker oder Abteilung}
+      \medskip
+      \item[\faQuestionCircle] \textbf{Wer pflegt die Personen einer Abteilung?}\\
+        {\small\color{gray} Sekretariate}
+    \end{itemize}
+  \end{tcolorbox}
+\end{frame}
+
+\end{document}
+
+
+Ausgabe der Suche: 
+
+Alphabetisch nach
+1. Abteilung
+2. Vorgesetzte
+3. Nachname
+
+Code ändern: Beisitz -> kein Beisitz
+
+Feld: Beisitze (Liste von Paaren mit Datum und Anzahl)
+
+Suchfunktion: Alle Felder ausgeben als Option
+
+Dokumentation schreiben
+
+Warnungs-Seite in mi-person
+
