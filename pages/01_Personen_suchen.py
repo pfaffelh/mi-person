@@ -115,14 +115,14 @@ if st.session_state.logged_in:
 
     # Das Label muss gleich bleiben, sonst verliert das Widget beim Umschalten seinen Zustand.
     code = st.multiselect("Zugehörigkeiten", codes_list, format_func = (lambda a: tools.repr(util.personencode, a, False, False)), placeholder = "Bitte auswählen", key = "export_code")
-    if beisitz:
-        st.caption("Beisitzer suchen: Es werden Personen gesucht, die mindestens eine der angegebenen Zugehörigkeiten haben.")
-    else:
-        st.caption("Es werden Personen gesucht, die all die angegebenen Zugehörigkeiten haben.")
+    st.caption("Zugehörigkeiten derselben Kategorie sind mit 'oder' verknüpft, verschiedene Kategorien mit 'und'. Beispiel: Postdocs, Doktorand:innen, MSt findet alle Postdocs und Doktorand:innen in MSt.")
 
-    # Erstellung der Query
-    if code:
-        query["code"] = {"$in": code} if beisitz else {"$all": code}
+    # Erstellung der Query: pro Codekategorie mindestens einer der gewählten Codes
+    kategorien = {}
+    for c in code:
+        kategorien.setdefault(util.personencode.find_one({"_id": c})["codekategorie"], []).append(c)
+    for loc in kategorien.values():
+        query["$and"].append({"code": {"$in": loc}})
 
     result = list(util.person.find(query, sort=[("name", pymongo.ASCENDING), ("vorname", pymongo.ASCENDING)]))
 
