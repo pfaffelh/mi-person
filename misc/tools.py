@@ -259,6 +259,11 @@ def reset_vars(text=""):
 def display_navigation():
     show_pending_toasts()
     st.markdown("<style>.st-emotion-cache-16txtl3 { padding: 2rem 2rem; }</style>", unsafe_allow_html=True)
+    # Lange Einträge in Multiselect-Tags vollständig anzeigen (umbrechen statt abschneiden)
+    st.markdown("""<style>
+        .stMultiSelect span[data-baseweb="tag"] { max-width: none !important; height: auto !important; }
+        .stMultiSelect span[data-baseweb="tag"] span[title] { max-width: none !important; overflow: visible !important; white-space: normal !important; text-overflow: clip !important; }
+        </style>""", unsafe_allow_html=True)
     with st.sidebar:
         st.image("static/ufr.png", use_container_width=True)
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
