@@ -277,6 +277,8 @@ def display_navigation():
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
     st.sidebar.page_link("pages/03_Personen.py", label="Personen")
     st.sidebar.page_link("pages/10_Codes.py", label="Codes")
+    st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
+    st.sidebar.page_link("pages/20_Dokumentation.py", label="Dokumentation")
 
 # short Version ohne abhängige Variablen
 def repr(collection, id, show_collection = True, short = False):
