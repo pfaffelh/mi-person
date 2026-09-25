@@ -1,5 +1,6 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
+import pymongo
 
 # Seiten-Layout
 st.set_page_config(page_title="PERSON", page_icon=None, layout="wide", initial_sidebar_state="auto", menu_items=None)
@@ -31,8 +32,8 @@ In dieser App werden die Personen des Mathematischen Instituts verwaltet: Kontak
 **Navigation (links):**
 - _Suchen/Datenexport_: Personen nach verschiedenen Kriterien suchen und als Excel-Datei herunterladen, siehe _Daten exportieren_.
 - _Warnungen_: Inkonsistenzen in der Datenbank, z.B. aktuelle Personen ohne Email-Adresse oder ohne Abteilung. Oben kann man eine Abteilung auswählen. Standardmäßig werden nur aktuelle Personen berücksichtigt, die einer Statusgruppe angehören. Schaltet man das aus, erscheinen zusätzlich die Personen ohne Statusgruppe. Die Warnungen sollten regelmäßig abgearbeitet werden, siehe _Für Abteilungssekretariate_.
-- _Personen_: Liste aller Personen, gefiltert nach Codes und danach, ob die Person aktuell oder ehemalig ist. Von hier aus werden Personen angelegt und bearbeitet.
-- _Codes_: Die Codekategorien (z.B. _Abteilung_, _Statusgruppe_, _Studiendekanat_) und die zugehörigen Codes (z.B. _MSt_, _Doktorand:innen_, _beisitz_), die den Personen als _Zugehörigkeiten_ zugeordnet werden.
+- _Personen_: Liste aller Personen, gefiltert nach Abteilung (Auswahl oben, wie bei den Warnungen), nach Codes und danach, ob die Person aktuell oder ehemalig ist. Codes derselben Kategorie sind dabei mit _oder_ verknüpft, verschiedene Kategorien mit _und_ (wie beim Datenexport). Die Einstellungen bleiben erhalten, wenn man eine Person bearbeitet und zurückkommt. Von hier aus werden Personen angelegt und bearbeitet.
+- _Codes_: Die Codekategorien (z.B. _Abteilung_, _Statusgruppe_, _Studiendekanat_) und die zugehörigen Codes (z.B. _MSt_, _Doktorand:innen_, _kein beisitz_), die den Personen als _Zugehörigkeiten_ zugeordnet werden.
 
 **Speichern und gleichzeitiges Bearbeiten:** Bei jedem Speichern wird vermerkt, wer wann zuletzt bearbeitet hat. Hat jemand anderes eine Person geändert, während man sie selbst offen hatte, wird nicht gespeichert, sondern gewarnt. Die Anzeige zeigt dann den aktuellen Stand; eigene, noch nicht gespeicherte Eingaben bleiben in den Feldern stehen und können erneut gespeichert werden.
 """)
@@ -111,6 +112,44 @@ Nur das Dekanat sieht und ändert die Vertragsdaten einer Person (unter _Persone
 - _Abwesenheit_ (Beginn und Ende, mit Kommentar) für längere Abwesenheiten wie Elternzeit. Es müssen immer Beginn und Ende angegeben werden.
 
 Im Datenexport gibt es für das Dekanat zusätzlich die Ausgabe _Vertragsdauer_ (Ein- und Ausstiegsdatum, Kommentar zur Stelle, Abwesenheiten).
+""")
+
+    with st.expander("Codekategorien"):
+        st.markdown("""
+Personen werden über **Codes** eingeordnet, die in **Codekategorien** zusammengefasst sind. Beispiel: In der Codekategorie _Abteilung_ gibt es die Codes _D_, _PA_, _RM_, ..., in der Codekategorie _Statusgruppe_ die Codes _Professor:innen_, _Postdocs_, _Doktorand:innen_, ... Einer Person können beliebig viele Codes zugeordnet werden, auch mehrere aus derselben Kategorie (z.B. zwei Abteilungen). Beim Bearbeiten einer Person heißen die Codes _Zugehörigkeiten_.
+
+**Wofür die Codes verwendet werden:**
+- **Suchen:** Auf den Seiten _Personen_ und _Suchen/Datenexport_ kann nach Codes gefiltert werden; Codes derselben Kategorie sind dabei mit _oder_ verknüpft, verschiedene Kategorien mit _und_.
+- **Datenexport:** Jede Codekategorie kann als Spalte ausgegeben werden.
+- **Homepage:** Die Personenseiten sind nach _Statusgruppe_ gegliedert (in der Reihenfolge der Codes), und es gibt eigene Seiten für jede _Abteilung_.
+- **Adressbuch (LDAP):** Die Abteilungen einer Person werden mit übertragen.
+- **Warnungen** und **Beisitzer suchen** verwenden die Kategorien _Abteilung_, _Statusgruppe_ und _Studiendekanat_.
+
+**Achtung:** Die Namen der Codekategorien _Abteilung_ und _Statusgruppe_, die Codes der Abteilungen sowie die Codes _Doktorand:innen_ und _Postdocs_ werden von den Programmen (diese App, Homepage, LDAP) über ihren Namen gefunden. Sie sollten daher nicht umbenannt werden.
+
+**Pflege** auf der Seite _Codes_: Oben wählt man eine Codekategorie und kann deren Codes anlegen, bearbeiten, löschen und mit den Pfeilen sortieren. Unter _Codes einstellen_ lassen sich die Codes dieser Kategorie in einer Tabelle für alle Personen auf einmal setzen (danach _Codes übernehmen_). Ganz unten werden die Codekategorien selbst verwaltet.
+""")
+        # Aktuelle Codekategorien mit ihren Codes aus der Datenbank
+        zeilen = []
+        for ck in util.personencodekategorie.find({"name_de": {"$ne": "-"}}, sort = [("rang", pymongo.ASCENDING)]):
+            codes = [c["name"] for c in util.personencode.find({"codekategorie": ck["_id"]}, sort = [("rang", pymongo.ASCENDING)])]
+            if codes:
+                zeilen.append(f"- **{ck['name_de']}:** {', '.join(codes)}")
+        st.markdown("**Aktuelle Codekategorien und Codes:**\n" + "\n".join(zeilen))
+
+    with st.expander("Abkürzungen"):
+        st.markdown("""
+- **VVZ:** Vorlesungsverzeichnis; die gleichnamige App verwendet dieselbe Personendatenbank.
+- **LDAP:** das Adressbuch des Instituts, siehe _Allgemeines_.
+- **RZ-Kennung:** die Benutzerkennung des Rechenzentrums der Universität.
+""")
+        # Abteilungen direkt aus der Datenbank, damit die Liste aktuell bleibt
+        abteilung = util.personencodekategorie.find_one({"name_de": "Abteilung"})
+        st.markdown("**Abteilungen:**\n" + "\n".join(f"- **{c['name']}:** {c['beschreibung_de']}" for c in util.personencode.find({"codekategorie": abteilung["_id"]}, sort = [("rang", pymongo.ASCENDING)])))
+        st.markdown("""
+**Gebäude:**
+- **EZ1:** Ernst-Zermelo-Str. 1
+- **HH10:** Hermann-Herder-Str. 10
 """)
 
 else:

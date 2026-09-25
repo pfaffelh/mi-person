@@ -121,9 +121,8 @@ def setup_session_state():
     if "kommentar_new" not in st.session_state:
         st.session_state.kommentar_new = ""
     if "code_list" not in st.session_state:
-        # Statusgruppen-Codes (für default-Anzeige). Erfordert zwei find()-Calls,
-        # daher hinter dem session-state-Guard – ändert sich pro Session nicht.
-        st.session_state["code_list"] = [x["_id"] for x in list(personencode.find({"codekategorie" : personencodekategorie.find_one({"name_de" : "Statusgruppe"})["_id"]}))]
+        # Default-Auswahl auf der Seite Personen: Doktorand:innen und Postdocs
+        st.session_state["code_list"] = [x["_id"] for x in personencode.find({"name" : {"$in" : ["Doktorand:innen", "Postdocs"]}}, sort = [("rang", pymongo.ASCENDING)])]
 
     ### temporary data ###
     ### should be also cleared on every page with tools.

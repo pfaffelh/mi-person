@@ -33,22 +33,44 @@ if st.session_state.logged_in:
         switch_page("personen edit")
 
     all_codes = []
+    kategorie_von = {}
     for ck in list(util.personencodekategorie.find({}, sort = [("rang", pymongo.ASCENDING)])):
         loc = [x["_id"] for x in list(util.personencode.find({"codekategorie" : ck["_id"]}, sort = [("rang", pymongo.ASCENDING)]))]
         all_codes = all_codes + loc
-        if ck["name_de"] == "Statusgruppe":
-            statusgruppen = loc
+        kategorie_von = kategorie_von | {c: ck["_id"] for c in loc}
 
     
-    st.session_state.code_list = st.multiselect("Codes", all_codes, statusgruppen, format_func = (lambda a: tools.repr(util.personencode, a, show_collection=False)), placeholder = "Bitte auswählen", help = "Es werden nur Personen angezeigt, die einen der genannten Codes haben.", key = "key_code_list")
-     
-    alle = st.toggle("Alle Personen anzeigen", False)
-    aktuell = st.toggle("Aktuelle Personen anzeigen", False if alle else True)
-    ehemalig = st.toggle("Ehemalige Personen anzeigen", False)
+    # Die Einstellungen bleiben erhalten, wenn man eine Person bearbeitet und zurückkommt:
+    # Streamlit löscht den Zustand von Widgets, sobald sie nicht mehr angezeigt werden. Daher
+    # werden die Werte zusätzlich unter eigenen Keys gespeichert und nach einem Seitenwechsel
+    # (wenn der Widget-Key fehlt) zurückkopiert.
+    for k, default in [("abteilung", "Alle"), ("alle", False), ("aktuell", True), ("ehemalig", False)]:
+        if f"key_personen_{k}" not in st.session_state:
+            st.session_state[f"key_personen_{k}"] = st.session_state.setdefault(f"personen_{k}", default)
+    if "key_code_list" not in st.session_state:
+        st.session_state.key_code_list = st.session_state.code_list
 
+    # Auswahl der Abteilung wie auf der Seite Warnungen
+    abteilung = util.personencodekategorie.find_one({"name_de": "Abteilung"})
+    abt_dict = {a["_id"]: a for a in util.personencode.find({"codekategorie": abteilung["_id"]}, sort = [("rang", pymongo.ASCENDING)])}
+    auswahl = st.session_state.personen_abteilung = st.pills("Abteilung", ["Alle"] + list(abt_dict.keys()), format_func = (lambda a: a if a == "Alle" else abt_dict[a]["name"]), key = "key_personen_abteilung")
+
+    st.session_state.code_list = st.multiselect("Codes", all_codes, format_func = (lambda a: tools.repr(util.personencode, a, show_collection=False)), placeholder = "Bitte auswählen", key = "key_code_list")
+    st.caption("Codes derselben Kategorie sind mit 'oder' verknüpft, verschiedene Kategorien mit 'und'. Beispiel: Postdocs, Doktorand:innen, MSt zeigt alle Postdocs und Doktorand:innen in MSt.")
+
+    alle = st.session_state.personen_alle = st.toggle("Alle Personen anzeigen", key = "key_personen_alle")
+    aktuell = st.session_state.personen_aktuell = st.toggle("Aktuelle Personen anzeigen", key = "key_personen_aktuell")
+    ehemalig = st.session_state.personen_ehemalig = st.toggle("Ehemalige Personen anzeigen", key = "key_personen_ehemalig")
+
+    # pro Codekategorie mindestens einer der gewählten Codes
     queries = []
-    if st.session_state["code_list"] != []:
-        queries.append({"code": {"$in": st.session_state["code_list"]}})
+    kategorien = {}
+    for c in st.session_state["code_list"]:
+        kategorien.setdefault(kategorie_von.get(c), []).append(c)
+    for loc in kategorien.values():
+        queries.append({"code": {"$in": loc}})
+    if auswahl not in [None, "Alle"]:
+        queries.append({"code": auswahl})
     if alle:
         aktuell = False
         ehemalig = False

@@ -248,6 +248,10 @@ def is_dekanat(username):
 
 def logout():
     st.session_state.logged_in = False
+    # Gemerkte Einstellungen der Seite Personen verwerfen; nach dem nächsten Login
+    # setzt util.setup_session_state wieder die Defaults.
+    for k in ["code_list", "personen_alle", "personen_aktuell", "personen_ehemalig", "personen_abteilung", "key_code_list", "key_personen_abteilung", "key_personen_alle", "key_personen_aktuell", "key_personen_ehemalig"]:
+        st.session_state.pop(k, None)
     util.logger.info(f"User {st.session_state.user} hat sich ausgeloggt.")
 
 def reset_vars(text=""):
