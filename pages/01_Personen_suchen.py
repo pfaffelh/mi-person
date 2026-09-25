@@ -61,7 +61,6 @@ if st.session_state.logged_in:
     st.session_state.setdefault("export_code", [x["_id"] for x in util.personencode.find({"name" : "Wissenschaftlicher Dienst"})])
     st.session_state.setdefault("export_ausgaben", ["Name", "Mail"])
 
-    beisitz = st.toggle("Beisitzer suchen", False, key = "export_beisitz", on_change = beisitz_defaults, help = "Stellt die Auswahl auf Doktorand:innen und Postdocs, die am Stichtag nicht abwesend sind. Sortiert wird nach Abteilung, Vorgesetzte, Nachname, Vorname.")
     temporaer = st.toggle("Temporäre Abwesenheiten mit berücksichtigen", key = "export_temporaer")
     if temporaer:
         query = {"$and": [
@@ -126,6 +125,8 @@ if st.session_state.logged_in:
 
     result = list(util.person.find(query, sort=[("name", pymongo.ASCENDING), ("vorname", pymongo.ASCENDING)]))
 
+    st.divider()
+    beisitz = st.toggle("Beisitzer suchen", False, key = "export_beisitz", on_change = beisitz_defaults, help = "Stellt die Auswahl auf Doktorand:innen und Postdocs, die am Stichtag nicht abwesend sind. Sortiert wird nach Abteilung, Vorgesetzte, Nachname, Vorname.")
     st.divider()
     st.write("Folgende Felder werden ausgegeben")
     # Auswahl der Ausgabe
