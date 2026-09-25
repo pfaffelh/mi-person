@@ -273,6 +273,7 @@ def display_navigation():
         st.image("static/ufr.png", use_container_width=True)
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
     st.sidebar.page_link("pages/01_Personen_suchen.py", label="Suchen/Datenexport")
+    st.sidebar.page_link("pages/02_Warnungen.py", label="Warnungen")
     st.sidebar.write("<hr style='height:1px;margin:0px;;border:none;color:#333;background-color:#333;' /> ", unsafe_allow_html=True)
     st.sidebar.page_link("pages/03_Personen.py", label="Personen")
     st.sidebar.page_link("pages/10_Codes.py", label="Codes")
