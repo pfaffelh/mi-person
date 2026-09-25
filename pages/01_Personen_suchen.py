@@ -48,8 +48,21 @@ if st.session_state.logged_in:
     # Stichtag
     stichtag = st.date_input("Stichtag", value = datetime.datetime.today(), format="DD.MM.YYYY")
     stichtag = datetime.datetime.combine(stichtag, datetime.time(12,0))
-    beisitz = st.toggle("Beisitzer suchen", False, help = "Doktorand:innen und Postdocs, die am Stichtag nicht abwesend sind.")
-    temporaer = True if beisitz else st.toggle("Temporäre Abwesenheiten mit berücksichtigen", False)
+    # Beim Einschalten von "Beisitzer suchen" werden die Auswahlfelder auf die
+    # Beisitzer-Defaults gesetzt; sie bleiben änderbar. Beim Ausschalten bleibt alles stehen.
+    beisitz_codes = [x["_id"] for x in util.personencode.find({"name" : {"$in": ["Doktorand:innen", "Postdocs"]}}, sort = [("rang", pymongo.ASCENDING)])]
+    beisitz_ausgaben = ["Name", "Mail", "Vorgesetzte", "Abteilung", "Studiendekanat", "Beisitze der letzten 365 Tage"]
+    def beisitz_defaults():
+        if st.session_state.export_beisitz:
+            st.session_state.export_temporaer = True
+            st.session_state.export_code = beisitz_codes
+            st.session_state.export_ausgaben = beisitz_ausgaben
+    st.session_state.setdefault("export_temporaer", False)
+    st.session_state.setdefault("export_code", [x["_id"] for x in util.personencode.find({"name" : "Wissenschaftlicher Dienst"})])
+    st.session_state.setdefault("export_ausgaben", ["Name", "Mail"])
+
+    beisitz = st.toggle("Beisitzer suchen", False, key = "export_beisitz", on_change = beisitz_defaults, help = "Stellt die Auswahl auf Doktorand:innen und Postdocs, die am Stichtag nicht abwesend sind. Sortiert wird nach Abteilung, Vorgesetzte, Nachname, Vorname.")
+    temporaer = st.toggle("Temporäre Abwesenheiten mit berücksichtigen", key = "export_temporaer")
     if temporaer:
         query = {"$and": [
             {
@@ -100,32 +113,39 @@ if st.session_state.logged_in:
         loc = [x["_id"] for x in list(util.personencode.find({"codekategorie" : ck["_id"]}, sort = [("rang", pymongo.ASCENDING)]))]
         codes_list = codes_list + loc
 
+    # Das Label muss gleich bleiben, sonst verliert das Widget beim Umschalten seinen Zustand.
+    code = st.multiselect("Zugehörigkeiten", codes_list, format_func = (lambda a: tools.repr(util.personencode, a, False, False)), placeholder = "Bitte auswählen", key = "export_code")
     if beisitz:
-        # Personen mit Statusgruppe Doktorand:innen oder Postdocs
-        query["code"] = {"$in": [x["_id"] for x in util.personencode.find({"name" : {"$in": ["Doktorand:innen", "Postdocs"]}})]}
+        st.caption("Beisitzer suchen: Es werden Personen gesucht, die mindestens eine der angegebenen Zugehörigkeiten haben.")
     else:
-        default = [x["_id"] for x in util.personencode.find({"name" : "Wissenschaftlicher Dienst"})]
-        code = st.multiselect("Zugehörigkeiten (d.h. es werden Personen gesucht, die all die angegebenen Zugehörigkeiten haben)", codes_list, default, format_func = (lambda a: tools.repr(util.personencode, a, False, False)), placeholder = "Bitte auswählen")
+        st.caption("Es werden Personen gesucht, die all die angegebenen Zugehörigkeiten haben.")
 
-        # Erstellung der Query
-        if code:
-            query["code"] = {"$all": code}
+    # Erstellung der Query
+    if code:
+        query["code"] = {"$in": code} if beisitz else {"$all": code}
 
     result = list(util.person.find(query, sort=[("name", pymongo.ASCENDING), ("vorname", pymongo.ASCENDING)]))
 
+    st.divider()
+    st.write("Folgende Felder werden ausgegeben")
+    # Auswahl der Ausgabe
+
+    ausgabe_list_all = ["Name", "Titel", "Abschluss", "RZ-Kennung", "Gender", "Telefon", "Mail", "Vorgesetzte", "Raum", "Homepage", "Beisitze der letzten 365 Tage"]
+    if tools.is_dekanat(st.session_state.user):
+        ausgabe_list_all = ausgabe_list_all + ["Vertragsdauer"]
+
+    codekategorie_list_all = [x["name_de"] for x in codekategorie_list]
+    ausgaben = st.multiselect("Was soll ausgegebn werden?", ausgabe_list_all + codekategorie_list_all, key = "export_ausgaben")
+
     if beisitz:
-        ausgaben = ["Name", "Mail", "Vorgesetzte", "Abteilung", "Studiendekanat", "Beisitze der letzten 365 Tage"]
-    else:
-        st.divider()
-        st.write("Folgende Felder werden ausgegeben")
-        # Auswahl der Ausgabe
-
-        ausgabe_list_all = ["Name", "Titel", "Abschluss", "RZ-Kennung", "Gender", "Telefon", "Mail", "Vorgesetzte", "Raum", "Homepage", "Beisitze der letzten 365 Tage"]
-        if tools.is_dekanat(st.session_state.user):
-            ausgabe_list_all = ausgabe_list_all + ["Vertragsdauer"]
-
-        codekategorie_list_all = [x["name_de"] for x in codekategorie_list]
-        ausgaben = st.multiselect("Was soll ausgegebn werden?", ausgabe_list_all + codekategorie_list_all, default = ["Name", "Mail"])
+        # Sortierung nach Abteilung, Vorgesetzte, Nachname, Vorname; ohne Abteilung bzw. Vorgesetzte ans Ende
+        abteilung = util.personencodekategorie.find_one({"name_de": "Abteilung"})
+        abt_codes = [x["_id"] for x in util.personencode.find({"codekategorie": abteilung["_id"]}, sort = [("rang", pymongo.ASCENDING)])]
+        def sortierung(r):
+            abt = ", ".join(tools.repr(util.personencode, x, False, True) for x in abt_codes if x in r["code"])
+            vor = ", ".join(tools.repr(util.person, x, False, True) for x in r["vorgesetzte"])
+            return (abt or "\uffff", vor or "\uffff", r["name"], r["vorname"])
+        result = sorted(result, key = sortierung)
 
     # TODO
     # für dekanat: einstiegsdatum, ausstiegsdatum, abwesend_start, abwesend_ende
@@ -169,11 +189,12 @@ if st.session_state.logged_in:
         dict["Beisitze der letzten 365 Tage"] = [tools.beisitze_365(r) for r in result]
 
 
+    # Spalten in der Reihenfolge der Auswahl
+    spalten = {"Name": ["Nachname", "Vorname", "name_prefix"], "Telefon": ["Telefon"], "Vertragsdauer": ["Einstiegsdatum", "Ausstiegsdatum", "Kommentar Stelle", "Abwesenheit Start", "Abwesenheit Ende", "Abwesenheit Kommentar"]}
+    dict = {k: dict[k] for a in ausgaben for k in spalten.get(a, [a]) if k in dict}
     df = pd.DataFrame(dict)
     if beisitz:
-        # Personen ohne Abteilung bzw. Vorgesetzte ans Ende
-        df = df[["Nachname", "Vorname", "Mail", "Vorgesetzte", "Abteilung", "Studiendekanat", "Beisitze der letzten 365 Tage"]]
-        df = df.sort_values(["Abteilung", "Vorgesetzte", "Nachname", "Vorname"], key = lambda c: c.replace("", "\uffff"))
+        df = df.drop(columns = ["name_prefix"], errors = "ignore")
 
     st.divider()
 

@@ -28,6 +28,11 @@ def keine_email(p):
     if ist_schon_da(p) and p["email1"] == "" and p["email2"] == "":
         return "hat keine Email-Adresse."
 
+# abt_dict wird unten gesetzt
+def keine_abteilung(p):
+    if not any(c in abt_dict for c in p["code"]):
+        return "ist keiner Abteilung zugeordnet."
+
 regeln = [keine_email]
 
 if st.session_state.logged_in:
@@ -50,6 +55,9 @@ if st.session_state.logged_in:
         ]
     if auswahl not in [None, "Alle"]:
         query["code"] = auswahl
+    # Ist eine Abteilung ausgewählt, haben alle angezeigten Personen eine Abteilung.
+    if auswahl in [None, "Alle"]:
+        regeln.append(keine_abteilung)
     personen = list(util.person.find(query, sort = [("name", pymongo.ASCENDING), ("vorname", pymongo.ASCENDING)]))
 
     # Warnungen nach Statusgruppen (in der Reihenfolge ihres Rangs) sortieren;
