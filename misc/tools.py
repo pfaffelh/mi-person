@@ -5,7 +5,7 @@ import ldap
 import misc.util as util
 from bson import ObjectId
 from misc.config import *
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # st.toast() direkt vor st.rerun() (oder am Ende eines on_click-Callbacks) wird
 # oft nur als Flash gezeigt: der Rerun beginnt, bevor das Frontend den Toast
@@ -255,6 +255,11 @@ def reset_vars(text=""):
     warnung_loeschen()
     if text != "":
         flash(text)
+
+# Summe der Beisitze einer Person in den letzten 365 Tagen
+def beisitze_365(person):
+    grenze = datetime.combine(datetime.today().date() - timedelta(days = 365), datetime.min.time())
+    return sum(b["anzahl"] for b in person.get("beisitz", []) if b["datum"] >= grenze)
 
 def display_navigation():
     show_pending_toasts()

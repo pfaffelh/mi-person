@@ -223,7 +223,8 @@ def setup_session_state():
                 "kommentar_stelle" : "",
                 "code": [],
                 "semester": [st.session_state.semester_id],
-                "veranstaltung": []
+                "veranstaltung": [],
+                "beisitz": []
         },
         studiengang: {"name": "Neuer Studiengang",
                 "bearbeitet": bearbeitet_neu,

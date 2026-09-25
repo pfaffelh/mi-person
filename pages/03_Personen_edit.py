@@ -30,6 +30,31 @@ geb = list(util.gebaeude.find({}, sort=[("name_de", pymongo.ASCENDING)]))
 new_entry = False
 submit1 = submit2 = False
 
+# Beisitze: Die bearbeitete Liste liegt in st.session_state.beisitz_edit, damit
+# Zeilen hinzugefügt und gelöscht werden können. Jede Zeile hat eine uid für die Widget-Keys.
+def beisitz_init(x):
+    # Neu laden, wenn eine andere Person gewählt oder die Person gespeichert wurde
+    key = (x["_id"], None if x["_id"] == "new" else x["bearbeitet"])
+    if st.session_state.get("beisitz_edit", {}).get("key") != key:
+        grenze = datetime.date.today() - datetime.timedelta(days = 365)
+        zeilen = [{"datum": b["datum"].date(), "anzahl": b["anzahl"]} for b in x.get("beisitz", [])]
+        st.session_state.beisitz_edit = {
+            "key": key,
+            # Ältere Einträge werden nicht angezeigt, aber beim Speichern behalten
+            "alt": [z for z in zeilen if z["datum"] < grenze],
+            "zeilen": [z | {"uid": i} for i, z in enumerate(z for z in zeilen if z["datum"] >= grenze)],
+            "next_uid": len(zeilen)
+        }
+
+def beisitz_neu():
+    be = st.session_state.beisitz_edit
+    be["zeilen"].insert(0, {"datum": datetime.date.today(), "anzahl": 1, "uid": be["next_uid"]})
+    be["next_uid"] += 1
+
+def beisitz_loeschen(uid):
+    be = st.session_state.beisitz_edit
+    be["zeilen"] = [z for z in be["zeilen"] if z["uid"] != uid]
+
 def sort_persons(personen_list):
     loc = [util.person.find_one({"_id" : p_id}) for p_id in personen_list]
     loc = sorted(loc, key=itemgetter('name', 'vorname'))
@@ -53,6 +78,7 @@ if st.session_state.logged_in:
     col1, col2, col3, col4 = st.columns([1, 1, 2, 1])
     with col1:
         if st.button("Zurück ohne Speichern"):
+            st.session_state.pop("beisitz_edit", None)
             switch_page("Personen")
     with col2: 
         if st.button('Speichern', type = 'primary', key="submit1"):
@@ -209,7 +235,23 @@ if st.session_state.logged_in:
     se = list(util.semester.find({"_id": {"$in": semester_list}}, sort=[("rang", pymongo.ASCENDING)]))
     semester_list = [s["_id"] for s in se]
 
-    x_updated = ({"name": name, "name_en": name_en, "vorname": vorname, "name_prefix": name_prefix, "titel": titel, "abschluss": abschluss, "kennung" : kennung, "gender" : gender, "vorgesetzte" : vorgesetzte, "kommentar": kommentar, "kommentar_abwesend": kommentar_abwesend, "kommentar_stelle": kommentar_stelle, "kommentar_html": kommentar_html, "tel1": tel1, "tel2": tel2, "email1": email1.replace(" ", ""), "email2": email2.replace(" ", ""), "raum1" : raum1, "raum2" : raum2, "gebaeude1" : gebaeude1, "gebaeude2" : gebaeude2, "url" : url, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "einstiegsdatum" : einstiegsdatum, "ausstiegsdatum" : ausstiegsdatum, "abwesend_start" : abwesend_start, "abwesend_ende" : abwesend_ende, "semester": semester_list, "code" : code})
+    beisitz_init(x)
+    with st.expander("Beisitze der letzten 365 Tage"):
+        be = st.session_state.beisitz_edit
+        st.button("Neuer Eintrag", on_click = beisitz_neu)
+        for z in be["zeilen"]:
+            col1, col2, col3 = st.columns([2, 2, 1], vertical_alignment = "bottom")
+            with col1:
+                z["datum"] = st.date_input("Datum", value = z["datum"], format = "DD.MM.YYYY", key = f"beisitz_datum_{z['uid']}")
+            with col2:
+                z["anzahl"] = st.number_input("Anzahl", min_value = 0, value = z["anzahl"], step = 1, key = f"beisitz_anzahl_{z['uid']}")
+            with col3:
+                st.button("Löschen", key = f"beisitz_loeschen_{z['uid']}", on_click = beisitz_loeschen, args = (z["uid"],))
+        if be["alt"]:
+            st.write("Dazu kommt 1 älterer Eintrag, der hier nicht angezeigt wird." if len(be["alt"]) == 1 else f"Dazu kommen {len(be['alt'])} ältere Einträge, die hier nicht angezeigt werden.")
+    beisitz = sorted([{"datum": datetime.datetime.combine(z["datum"], datetime.time.min), "anzahl": int(z["anzahl"])} for z in be["alt"] + be["zeilen"]], key = lambda b: b["datum"], reverse = True)
+
+    x_updated = ({"name": name, "name_en": name_en, "vorname": vorname, "name_prefix": name_prefix, "titel": titel, "abschluss": abschluss, "kennung" : kennung, "gender" : gender, "vorgesetzte" : vorgesetzte, "kommentar": kommentar, "kommentar_abwesend": kommentar_abwesend, "kommentar_stelle": kommentar_stelle, "kommentar_html": kommentar_html, "tel1": tel1, "tel2": tel2, "email1": email1.replace(" ", ""), "email2": email2.replace(" ", ""), "raum1" : raum1, "raum2" : raum2, "gebaeude1" : gebaeude1, "gebaeude2" : gebaeude2, "url" : url, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "einstiegsdatum" : einstiegsdatum, "ausstiegsdatum" : ausstiegsdatum, "abwesend_start" : abwesend_start, "abwesend_ende" : abwesend_ende, "semester": semester_list, "code" : code, "beisitz": beisitz})
     if st.button('Speichern', type = 'primary', key="submit2"):
         submit2 = True
 
