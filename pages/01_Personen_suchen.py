@@ -199,7 +199,7 @@ if st.session_state.logged_in:
 
     st.divider()
 
-    st.data_editor(df, use_container_width=True, hide_index=True)   
+    st.dataframe(df, use_container_width=True, hide_index=True)   
     # xls Export
     output = BytesIO()
     excel_data = to_excel(df)
