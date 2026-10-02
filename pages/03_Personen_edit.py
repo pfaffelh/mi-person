@@ -115,6 +115,11 @@ if st.session_state.logged_in:
         name_prefix=st.text_input('Abkürzung des Vornamens', x["name_prefix"])
     col1, col2, col3 = st.columns([1, 1, 2])
     with col1:
+        namenszusatz_de=st.text_input('Namenszusatz (de)', x["namenszusatz_de"])
+    with col2:
+        namenszusatz_en=st.text_input('Namenszusatz (en), nur falls abweichend', x["namenszusatz_en"])
+    col1, col2, col3 = st.columns([1, 1, 2])
+    with col1:
         titel=st.text_input('Titel', x["titel"])
     with col2:
         abschluss=st.text_input('hochster Abschluss', x["abschluss"])
@@ -251,7 +256,7 @@ if st.session_state.logged_in:
             st.write("Dazu kommt 1 älterer Eintrag, der hier nicht angezeigt wird." if len(be["alt"]) == 1 else f"Dazu kommen {len(be['alt'])} ältere Einträge, die hier nicht angezeigt werden.")
     beisitz = sorted([{"datum": datetime.datetime.combine(z["datum"], datetime.time.min), "anzahl": int(z["anzahl"])} for z in be["alt"] + be["zeilen"]], key = lambda b: b["datum"], reverse = True)
 
-    x_updated = ({"name": name, "name_en": name_en, "vorname": vorname, "name_prefix": name_prefix, "titel": titel, "abschluss": abschluss, "kennung" : kennung, "gender" : gender, "vorgesetzte" : vorgesetzte, "kommentar": kommentar, "kommentar_abwesend": kommentar_abwesend, "kommentar_stelle": kommentar_stelle, "kommentar_html": kommentar_html, "tel1": tel1, "tel2": tel2, "email1": email1.replace(" ", ""), "email2": email2.replace(" ", ""), "raum1" : raum1, "raum2" : raum2, "gebaeude1" : gebaeude1, "gebaeude2" : gebaeude2, "url" : url, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "einstiegsdatum" : einstiegsdatum, "ausstiegsdatum" : ausstiegsdatum, "abwesend_start" : abwesend_start, "abwesend_ende" : abwesend_ende, "semester": semester_list, "code" : code, "beisitz": beisitz})
+    x_updated = ({"name": name, "name_en": name_en, "vorname": vorname, "name_prefix": name_prefix, "namenszusatz_de": namenszusatz_de, "namenszusatz_en": namenszusatz_en, "titel": titel, "abschluss": abschluss, "kennung" : kennung, "gender" : gender, "vorgesetzte" : vorgesetzte, "kommentar": kommentar, "kommentar_abwesend": kommentar_abwesend, "kommentar_stelle": kommentar_stelle, "kommentar_html": kommentar_html, "tel1": tel1, "tel2": tel2, "email1": email1.replace(" ", ""), "email2": email2.replace(" ", ""), "raum1" : raum1, "raum2" : raum2, "gebaeude1" : gebaeude1, "gebaeude2" : gebaeude2, "url" : url, "sichtbar": sichtbar, "hp_sichtbar": hp_sichtbar, "einstiegsdatum" : einstiegsdatum, "ausstiegsdatum" : ausstiegsdatum, "abwesend_start" : abwesend_start, "abwesend_ende" : abwesend_ende, "semester": semester_list, "code" : code, "beisitz": beisitz})
     if st.button('Speichern', type = 'primary', key="submit2"):
         submit2 = True
 

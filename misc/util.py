@@ -197,6 +197,8 @@ def setup_session_state():
                 "kennung": "",
                 "titel": "",
                 "name_prefix": "",
+                "namenszusatz_de": "",
+                "namenszusatz_en": "",
                 "tel1": "",
                 "tel2": "",
                 "email1": "",

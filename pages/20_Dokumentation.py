@@ -53,7 +53,7 @@ Bevor man eine Person neu anlegt, sollte man unter _Personen_ nachsehen, ob es s
 Unter _Personen_ legt man mit _Neue Person hinzufügen_ eine Person an oder klickt auf eine bestehende Person, um sie zu bearbeiten. Gespeichert wird mit einem der beiden Buttons _Speichern_ (oben oder unten); _Zurück ohne Speichern_ verwirft die Änderungen.
 
 **Die Felder:**
-- _Name (de)_, _Vorname_, _Titel_, _höchster Abschluss_. _Name (en)_ nur ausfüllen, falls er auf Englisch anders geschrieben wird. Die _Abkürzung des Vornamens_ (z.B. _P._) wird in Kurzdarstellungen verwendet, etwa im Vorlesungsverzeichnis.
+- _Name (de)_, _Vorname_, _Titel_, _höchster Abschluss_. _Name (en)_ nur ausfüllen, falls er auf Englisch anders geschrieben wird. Die _Abkürzung des Vornamens_ (z.B. _P._) wird in Kurzdarstellungen verwendet, etwa im Vorlesungsverzeichnis. Der _Namenszusatz_ (z.B. _von_, _van der_) wird ebenfalls nur auf Englisch wiederholt, falls er dort abweicht.
 - _Vorgesetzte_: eine oder mehrere Personen.
 - _Gender_, _RZ-Kennung_.
 - _Zugehörigkeiten_: Codes aus allen Codekategorien, insbesondere die _Abteilung_ (auch mehrere möglich) und die _Statusgruppe_.
