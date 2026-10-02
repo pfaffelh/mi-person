@@ -117,7 +117,7 @@ if st.session_state.logged_in:
     with col1:
         namenszusatz_de=st.text_input('Namenszusatz (de)', x["namenszusatz_de"])
     with col2:
-        namenszusatz_en=st.text_input('Namenszusatz (en), nur falls abweichend', x["namenszusatz_en"])
+        namenszusatz_en=st.text_input('Namenszusatz (en)', x["namenszusatz_en"])
     col1, col2, col3 = st.columns([1, 1, 2])
     with col1:
         titel=st.text_input('Titel', x["titel"])
