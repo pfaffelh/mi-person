@@ -234,7 +234,7 @@ if st.session_state.logged_in:
     if (start_exists and not ende_exists) or (ende_exists and not start_exists):
         st.warning("Abwesenheiten können nur eingetragen werden, wenn sowohl Start als auch Ende vorhanden sind.")
         abwesend_start = None
-        abwesed_ende = None
+        abwesend_ende = None
 
     semester_list = st.multiselect("Semester", [x["_id"] for x in util.semester.find(sort = [("kurzname", pymongo.DESCENDING)])], x["semester"], format_func = (lambda a: tools.repr(util.semester, a, False, True)), placeholder = "Bitte auswählen")
     se = list(util.semester.find({"_id": {"$in": semester_list}}, sort=[("rang", pymongo.ASCENDING)]))
