@@ -51,7 +51,11 @@ if st.session_state.logged_in:
     # Beim Einschalten von "Beisitzer suchen" werden die Auswahlfelder auf die
     # Beisitzer-Defaults gesetzt; sie bleiben änderbar. Beim Ausschalten bleibt alles stehen.
     beisitz_codes = [x["_id"] for x in util.personencode.find({"name" : {"$in": ["Doktorand:innen", "Postdocs"]}}, sort = [("rang", pymongo.ASCENDING)])]
-    beisitz_ausgaben = ["Name", "Mail", "Vorgesetzte", "Abteilung", "Studiendekanat", "Beisitze der letzten 365 Tage"]
+    # Gezählt werden die Beisitze des laufenden Kalenderjahres. Der Name der Auswahl
+    # bleibt über den Jahreswechsel gleich, die Spalte der Tabelle trägt die Jahreszahl.
+    beisitz_auswahl = "Beisitze im Kalenderjahr"
+    beisitz_spalte = f"Beisitze {datetime.datetime.today().year}"
+    beisitz_ausgaben = ["Name", "Mail", "Vorgesetzte", "Abteilung", "Studiendekanat", beisitz_auswahl]
     def beisitz_defaults():
         if st.session_state.export_beisitz:
             st.session_state.export_temporaer = True
@@ -131,7 +135,7 @@ if st.session_state.logged_in:
     st.write("Folgende Felder werden ausgegeben")
     # Auswahl der Ausgabe
 
-    ausgabe_list_all = ["Name", "Titel", "Abschluss", "RZ-Kennung", "Gender", "Telefon", "Mail", "Vorgesetzte", "Raum", "Homepage", "Beisitze der letzten 365 Tage"]
+    ausgabe_list_all = ["Name", "Titel", "Abschluss", "RZ-Kennung", "Gender", "Telefon", "Mail", "Vorgesetzte", "Raum", "Homepage", beisitz_auswahl]
     if tools.is_dekanat(st.session_state.user):
         ausgabe_list_all = ausgabe_list_all + ["Vertragsdauer"]
 
@@ -186,12 +190,12 @@ if st.session_state.logged_in:
         loc = [x["_id"] for x in list(util.personencode.find({"codekategorie" : ck["_id"]}, sort = [("rang", pymongo.ASCENDING)]))]
         if ck["name_de"] in ausgaben:
             dict[ck["name_de"]] = [", ".join(tools.repr(util.personencode, x, False, True) for x in r["code"] if x in loc) for r in result] 
-    if "Beisitze der letzten 365 Tage" in ausgaben:
-        dict["Beisitze der letzten 365 Tage"] = [tools.beisitze_365(r) for r in result]
+    if beisitz_auswahl in ausgaben:
+        dict[beisitz_spalte] = [tools.beisitze_jahr(r) for r in result]
 
 
     # Spalten in der Reihenfolge der Auswahl
-    spalten = {"Name": ["Nachname", "Vorname", "name_prefix"], "Telefon": ["Telefon"], "Vertragsdauer": ["Einstiegsdatum", "Ausstiegsdatum", "Kommentar Stelle", "Abwesenheit Start", "Abwesenheit Ende", "Abwesenheit Kommentar"]}
+    spalten = {"Name": ["Nachname", "Vorname", "name_prefix"], "Telefon": ["Telefon"], beisitz_auswahl: [beisitz_spalte], "Vertragsdauer": ["Einstiegsdatum", "Ausstiegsdatum", "Kommentar Stelle", "Abwesenheit Start", "Abwesenheit Ende", "Abwesenheit Kommentar"]}
     dict = {k: dict[k] for a in ausgaben for k in spalten.get(a, [a]) if k in dict}
     df = pd.DataFrame(dict)
     if beisitz:

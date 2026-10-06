@@ -78,7 +78,7 @@ Unter _Suchen/Datenexport_ werden Personen gesucht und als Tabelle angezeigt, di
 - **Stichtag:** Es werden nur Personen gefunden, die am Stichtag am Institut sind, d.h. deren Einstiegsdatum (falls vorhanden) vor dem Stichtag und deren Ausstiegsdatum (falls vorhanden) nach dem Stichtag liegt.
 - **Temporäre Abwesenheiten mit berücksichtigen:** Ist das an, werden zusätzlich die Personen weggelassen, die am Stichtag abwesend sind (z.B. Elternzeit).
 - **Zugehörigkeiten:** Codes derselben Kategorie sind mit _oder_ verknüpft, verschiedene Kategorien mit _und_. Beispiel: _Postdocs_, _Doktorand:innen_, _MSt_ findet alle Postdocs und Doktorand:innen in der Abteilung MSt. Ohne Auswahl werden alle Personen gefunden.
-- **Was soll ausgegeben werden:** die Spalten der Tabelle, in der gewählten Reihenfolge. Neben den Personendaten kann jede Codekategorie ausgewählt werden (z.B. _Abteilung_), dann erscheinen die zugeordneten Codes. _Beisitze der letzten 365 Tage_ ist die Summe der Beisitze in den letzten 365 Tagen (ab heute gerechnet). _Vertragsdauer_ gibt es nur für das Dekanat.
+- **Was soll ausgegeben werden:** die Spalten der Tabelle, in der gewählten Reihenfolge. Neben den Personendaten kann jede Codekategorie ausgewählt werden (z.B. _Abteilung_), dann erscheinen die zugeordneten Codes. _Beisitze im Kalenderjahr_ ist die Summe der Beisitze im laufenden Kalenderjahr; die Spalte der Tabelle trägt die Jahreszahl (z.B. _Beisitze 2026_). _Vertragsdauer_ gibt es nur für das Dekanat.
 - **Sortierung:** nach Nachname, Vorname.
 
 **Beisitzer suchen:** Beim Einschalten werden die Einstellungen auf die Suche nach Beisitzer:innen gesetzt, siehe _Für das Prüfungsamt_. Die Einstellungen bleiben änderbar. Solange der Schalter an ist, wird nach Abteilung, Vorgesetzten, Nachname, Vorname sortiert (ohne Abteilung bzw. Vorgesetzte am Ende). Schaltet man ihn aus, bleiben alle Einstellungen stehen und nur die Sortierung ändert sich; schaltet man ihn wieder ein, werden die Einstellungen erneut gesetzt.
@@ -96,7 +96,7 @@ Unter _Suchen/Datenexport_ werden Personen gesucht und als Tabelle angezeigt, di
 **Beisitzer:innen suchen:** Unter _Suchen/Datenexport_ den Schalter _Beisitzer suchen_ einschalten. Dann wird eingestellt:
 - _Temporäre Abwesenheiten mit berücksichtigen_: an, d.h. wer am Stichtag abwesend ist, fehlt;
 - _Zugehörigkeiten_: _Doktorand:innen_ und _Postdocs_;
-- Ausgabe: _Name_, _Mail_, _Vorgesetzte_, _Abteilung_, _Studiendekanat_ und _Beisitze der letzten 365 Tage_;
+- Ausgabe: _Name_, _Mail_, _Vorgesetzte_, _Abteilung_, _Studiendekanat_ und _Beisitze im Kalenderjahr_;
 - Sortierung nach Abteilung, Vorgesetzten, Nachname, Vorname.
 
 In der Spalte _Studiendekanat_ sieht man z.B., ob jemand _deutschsprachig_ ist oder _wenig deutsch_ spricht, und ob ein Code wie _kein beisitz_ gesetzt ist. Alle Einstellungen können danach noch geändert werden, z.B. der Stichtag (etwa der Prüfungstag) oder eine Einschränkung auf eine Abteilung. Mit _Download Excel-Datei_ erhält man die Liste als Excel-Datei.

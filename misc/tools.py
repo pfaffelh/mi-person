@@ -260,10 +260,10 @@ def reset_vars(text=""):
     if text != "":
         flash(text)
 
-# Summe der Beisitze einer Person in den letzten 365 Tagen
-def beisitze_365(person):
-    grenze = datetime.combine(datetime.today().date() - timedelta(days = 365), datetime.min.time())
-    return sum(b["anzahl"] for b in person.get("beisitz", []) if b["datum"] >= grenze)
+# Summe der Beisitze einer Person im laufenden Kalenderjahr
+def beisitze_jahr(person):
+    jahr = datetime.today().year
+    return sum(b["anzahl"] for b in person.get("beisitz", []) if b["datum"].year == jahr)
 
 def display_navigation():
     show_pending_toasts()
