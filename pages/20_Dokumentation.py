@@ -42,7 +42,7 @@ In dieser App werden die Personen des Mathematischen Instituts verwaltet: Kontak
         st.markdown("""
 Der häufigste Ablauf für eine neue Person:
 1. **Studiendekanat oder Abteilungssekretariat:** Die Person wird angelegt, meist vom Studiendekanat bei der Planung des kommenden Semesters, damit sie im Vorlesungsverzeichnis eingetragen werden kann. Gibt es die Person zu Vertragsbeginn noch nicht, legt sie das Abteilungssekretariat bei der Erstellung des Vertrages an. Zu diesem Zeitpunkt fehlen meist noch viele Informationen (Email, Raum, Telefon, ...).
-2. **Dekanat:** Bei der Erstellung des Arbeitsvertrages werden die Vertragsdaten eingetragen: Einstiegs- und Ausstiegsdatum sowie der Kommentar zur Stelle, falls er nicht schon eingetragen ist, siehe _Für das Dekanat_.
+2. **Dekanat:** Bei der Erstellung des Arbeitsvertrages werden die Vertragsdaten eingetragen: Einstiegs- und Ausstiegsdatum sowie der Kommentar zur Stelle, siehe _Für das Dekanat_. Diese Felder sieht nur das Dekanat.
 3. **Abteilungssekretariat:** Bei Arbeitsbeginn wird der Rest eingetragen: Email, Telefon, Raum, Vorgesetzte, Abteilung, Statusgruppe usw., siehe _Für Abteilungssekretariate_.
 
 Bevor man eine Person neu anlegt, sollte man unter _Personen_ nachsehen, ob es sie nicht schon gibt, etwa weil sie früher schon einmal am Institut war. Beim Anlegen einer Person, deren Name und Vorname es schon gibt, erscheint eine Warnung.
