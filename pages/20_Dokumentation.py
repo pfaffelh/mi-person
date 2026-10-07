@@ -33,7 +33,7 @@ In dieser App werden die Personen des Mathematischen Instituts verwaltet: Kontak
 - _Suchen/Datenexport_: Personen nach verschiedenen Kriterien suchen und als Excel-Datei herunterladen, siehe _Daten exportieren_.
 - _Warnungen_: Inkonsistenzen in der Datenbank, z.B. aktuelle Personen ohne Email-Adresse oder ohne Abteilung. Oben kann man eine Abteilung auswählen. Standardmäßig werden nur aktuelle Personen berücksichtigt, die einer Statusgruppe angehören. Schaltet man das aus, erscheinen zusätzlich die Personen ohne Statusgruppe. Die Warnungen sollten regelmäßig abgearbeitet werden, siehe _Für Abteilungssekretariate_.
 - _Personen_: Liste aller Personen, gefiltert nach Abteilung (Auswahl oben, wie bei den Warnungen), nach Codes und danach, ob die Person aktuell oder ehemalig ist. Codes derselben Kategorie sind dabei mit _oder_ verknüpft, verschiedene Kategorien mit _und_ (wie beim Datenexport). Die Einstellungen bleiben erhalten, wenn man eine Person bearbeitet und zurückkommt. Von hier aus werden Personen angelegt und bearbeitet.
-- _Codes_: Die Codekategorien (z.B. _Abteilung_, _Statusgruppe_, _Studiendekanat_) und die zugehörigen Codes (z.B. _MSt_, _Doktorand:innen_, _kein beisitz_), die den Personen als _Zugehörigkeiten_ zugeordnet werden.
+- _Codes_: Die Codekategorien (z.B. _Abteilung_, _Statusgruppe_, _Studiendekanat_) und die zugehörigen Codes (z.B. _MSt_, _Doktorand:innen_, _kein Beisitz_), die den Personen als _Zugehörigkeiten_ zugeordnet werden.
 
 **Speichern und gleichzeitiges Bearbeiten:** Bei jedem Speichern wird vermerkt, wer wann zuletzt bearbeitet hat. Hat jemand anderes eine Person geändert, während man sie selbst offen hatte, wird nicht gespeichert, sondern gewarnt. Die Anzeige zeigt dann den aktuellen Stand; eigene, noch nicht gespeicherte Eingaben bleiben in den Feldern stehen und können erneut gespeichert werden.
 """)
@@ -41,8 +41,8 @@ In dieser App werden die Personen des Mathematischen Instituts verwaltet: Kontak
     with st.expander("Ablauf"):
         st.markdown("""
 Der häufigste Ablauf für eine neue Person:
-1. **Studiendekanat:** Bei der Planung des kommenden Semesters wird die Person angelegt, damit sie im Vorlesungsverzeichnis eingetragen werden kann. Zu diesem Zeitpunkt fehlen meist noch viele Informationen (Email, Raum, Telefon, ...).
-2. **Dekanat:** Bei der Erstellung des Arbeitsvertrages werden die Vertragsdaten eingetragen: Einstiegs- und Ausstiegsdatum, Kommentar zur Stelle, siehe _Für das Dekanat_.
+1. **Studiendekanat oder Abteilungssekretariat:** Die Person wird angelegt, meist vom Studiendekanat bei der Planung des kommenden Semesters, damit sie im Vorlesungsverzeichnis eingetragen werden kann. Gibt es die Person zu Vertragsbeginn noch nicht, legt sie das Abteilungssekretariat bei der Erstellung des Vertrages an. Zu diesem Zeitpunkt fehlen meist noch viele Informationen (Email, Raum, Telefon, ...).
+2. **Dekanat:** Bei der Erstellung des Arbeitsvertrages werden die Vertragsdaten eingetragen: Einstiegs- und Ausstiegsdatum sowie der Kommentar zur Stelle, falls er nicht schon eingetragen ist, siehe _Für das Dekanat_.
 3. **Abteilungssekretariat:** Bei Arbeitsbeginn wird der Rest eingetragen: Email, Telefon, Raum, Vorgesetzte, Abteilung, Statusgruppe usw., siehe _Für Abteilungssekretariate_.
 
 Bevor man eine Person neu anlegt, sollte man unter _Personen_ nachsehen, ob es sie nicht schon gibt, etwa weil sie früher schon einmal am Institut war. Beim Anlegen einer Person, deren Name und Vorname es schon gibt, erscheint eine Warnung.
@@ -86,7 +86,10 @@ Unter _Suchen/Datenexport_ werden Personen gesucht und als Tabelle angezeigt, di
 
     with st.expander("Für Abteilungssekretariate"):
         st.markdown("""
+- **Bei Vertragserstellung** die Person anlegen, falls es sie noch nicht gibt, siehe _Ablauf_. Vorher unter _Personen_ nachsehen, ob sie nicht schon einmal angelegt wurde.
 - **Bei Arbeitsbeginn** einer neuen Person die fehlenden Daten eintragen: Email, Telefon, Gebäude und Raum, Vorgesetzte, Homepage und vor allem die _Zugehörigkeiten_ _Abteilung_ und _Statusgruppe_. Ohne Statusgruppe erscheint die Person nicht auf den Personenseiten der Homepage.
+- **Für das Prüfungsamt** bei _Doktorand:innen_ und _Postdocs_ unbedingt die Zugehörigkeit _deutschsprachig_ oder _wenig deutsch_ (Kategorie _Studiendekanat_) eintragen. Das Prüfungsamt sucht darüber die Beisitzer:innen für mündliche Prüfungen; ohne Eintrag ist nicht erkennbar, ob die Person in Frage kommt.
+- **Bei Stipendiat:innen** zusätzlich die Zugehörigkeit _kein Beisitz_ setzen. Daran sieht das Prüfungsamt, dass die Person nicht für einen Beisitz angefragt werden soll.
 - **Regelmäßig die Warnungen ansehen** (Navigation links, _Warnungen_): Oben die eigene Abteilung auswählen und die Warnungen abarbeiten, etwa fehlende Email-Adressen. Personen, die gar keiner Abteilung zugeordnet sind, erscheinen nur bei der Auswahl _Alle_; es lohnt sich, auch dort gelegentlich nachzusehen, ob Personen der eigenen Abteilung darunter sind.
 - **Änderungen** (Raumwechsel, neue Telefonnummer, ...) zeitnah eintragen, da sie auf der Homepage und im Adressbuch erscheinen.
 """)
@@ -99,7 +102,7 @@ Unter _Suchen/Datenexport_ werden Personen gesucht und als Tabelle angezeigt, di
 - Ausgabe: _Name_, _Mail_, _Vorgesetzte_, _Abteilung_, _Studiendekanat_ und _Beisitze im Kalenderjahr_;
 - Sortierung nach Abteilung, Vorgesetzten, Nachname, Vorname.
 
-In der Spalte _Studiendekanat_ sieht man z.B., ob jemand _deutschsprachig_ ist oder _wenig deutsch_ spricht, und ob ein Code wie _kein beisitz_ gesetzt ist. Alle Einstellungen können danach noch geändert werden, z.B. der Stichtag (etwa der Prüfungstag) oder eine Einschränkung auf eine Abteilung. Mit _Download Excel-Datei_ erhält man die Liste als Excel-Datei.
+In der Spalte _Studiendekanat_ sieht man z.B., ob jemand _deutschsprachig_ ist oder _wenig deutsch_ spricht, und ob ein Code wie _kein Beisitz_ gesetzt ist. Alle Einstellungen können danach noch geändert werden, z.B. der Stichtag (etwa der Prüfungstag) oder eine Einschränkung auf eine Abteilung. Mit _Download Excel-Datei_ erhält man die Liste als Excel-Datei.
 
 **Beisitze eintragen:** Unter _Personen_ die Person öffnen und ganz unten (direkt über _Speichern_) den Bereich _Beisitze der letzten 365 Tage_ aufklappen. Mit _Neuer Eintrag_ kommt oben eine Zeile dazu, in die man das Datum und die Anzahl der Beisitze an diesem Tag einträgt; mit _Löschen_ wird eine Zeile entfernt. Beim Speichern werden die Einträge chronologisch rückwärts sortiert. Ältere Einträge (vor mehr als 365 Tagen) werden nicht angezeigt, bleiben aber gespeichert.
 """)
